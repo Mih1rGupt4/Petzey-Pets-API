@@ -1,4 +1,7 @@
 ﻿using Petzey.Data;
+using Petzey.Data.Repository;
+using Petzey.Domain.Entities;
+using Petzey.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,39 +14,37 @@ namespace Petzey.WebAPI.Controllers
     [RoutePrefix("api/pets")]
     public class PetsController : ApiController
     {
-        public PetzeyPetsDbContext db = new PetzeyPetsDbContext();
+       
+        public IPetsRepository repo = new PetsRepository();
 
         [HttpGet]
         public IHttpActionResult GetAllPets()
         {
-            var pets = db.Pets.ToList();
-   
+            List<Pet> pets = repo.getAllPets();
+
             if (pets.Any())
                 return Ok(pets);
             else
                 return Ok("No pets found ");
         }
 
+       
+
         [HttpGet]
         [Route("searchPets")]
-        public IHttpActionResult SearchPets([FromBody] string searchTerm)
+        public IHttpActionResult SearchPets( string searchTerm)
         {
-            var searchResults = db.Pets.Where(pet =>
-            pet.PetName.ToLower().Contains(searchTerm.ToLower()) ||
-            pet.Species.ToLower().Contains(searchTerm.ToLower()) ||
-            pet.Breed.ToLower().Contains(searchTerm.ToLower()) 
-            // Add
-            ).ToList();
-
+            var searchResults = repo.searchPets(searchTerm);
             if (searchResults.Any())
             {
-                return Ok(searchResults); 
+                return Ok(searchResults);
             }
             else
             {
                 return Ok("No pets found matching the search criteria.");
             }
-
         }
+
+       
     }
 }
