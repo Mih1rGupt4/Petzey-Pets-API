@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Petzey.Domain.Interfaces
 {
-    internal class deleteme
+    public interface IPetsRepository
     {
     }
 }
