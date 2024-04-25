@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Petzey.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,7 @@ namespace Petzey.Domain.Interfaces
 {
     public interface IPetsRepository
     {
+        Pet AddPet(Pet pet);
+        Pet EditPet(Pet pet);
     }
 }
