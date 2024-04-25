@@ -6,35 +6,48 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Petzey.WebAPI.Controllers
 {
     public class PetsController : ApiController
     {
-        IPetsRepository repo = new PetsRepository();
+        IPetsRepository _repo;
+        public PetsController()
+        {
+            _repo = new PetsRepository();
+        }
 
         [HttpGet]
-        public IHttpActionResult GetPetDetailsByPetID(int id)
+        public async Task<IHttpActionResult> GetPetDetailsByPetID(int id)
         {
-            Pet pet = repo.GetPetDetailsByPetID(id);
+            Pet pet = await _repo.GetPetDetailsByPetIDAsync(id);
             return OkOrNotFound(pet);
         }
 
         [HttpPost]
-        public IHttpActionResult GetMorePets(int pageNumber, int pageSize = 10) // Default pageSize is 10
+        public async Task<IHttpActionResult> GetMorePets(int pageNumber, int pageSize = 10) // Default pageSize is 10
         {
-            List<Pet> pets = repo.GetMorePets(pageNumber, pageSize);
-            return Ok(pets);
+            try
+            {
+                List<Pet> pets = await _repo.GetPetsAsync(pageNumber, pageSize);
+                return Ok(pets);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return InternalServerError(ex);
+            }
         }
 
 
-        private IHttpActionResult OkOrNotFound(object pet)
+        private IHttpActionResult OkOrNotFound(object obj)
         {
-            if(pet == null)
+            if(obj == null)
                 return NotFound();
             else
-                return Ok(pet);
+                return Ok(obj);
         }
     }
 }
