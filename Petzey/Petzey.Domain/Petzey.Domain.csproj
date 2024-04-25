@@ -53,7 +53,6 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Dtos\deleteme.cs" />
-    <Compile Include="Entities\deleteme.cs" />
     <Compile Include="Entities\Pet.cs" />
     <Compile Include="Exceptions\deleteme.cs" />
     <Compile Include="Interfaces\IPetsRepository.cs" />
