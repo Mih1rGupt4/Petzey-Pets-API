@@ -2,6 +2,7 @@
 using Petzey.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,29 +13,31 @@ namespace Petzey.Data.Repository
     {
         public PetzeyPetsDbContext db = new PetzeyPetsDbContext();
 
-        public List<Pet> getAllPets()
+        public async Task<List<Pet>> GetAllPetsAsync()
         {
-            return db.Pets.ToList();
+            return await db.Pets.ToListAsync();
         }
 
-        public List<Pet> searchPets(string searchTerm)
+        public async Task<List<Pet>> searchPetsAsync(string searchTerm)
         {
             if (string.IsNullOrEmpty(searchTerm))
             {
-                var Allpets = db.Pets.ToList(); // Return all pets if searchTerm is empty
+                var Allpets = await db.Pets.ToListAsync(); // Return all pets if searchTerm is empty
                 return (Allpets);
             }
             else
             {
 
-                var searchResults = db.Pets.Where(pet =>
-                    pet.PetName.ToLower().Contains(searchTerm.ToLower()) ||
-                    pet.Species.ToLower().Contains(searchTerm.ToLower()) ||
-                    pet.Breed.ToLower().Contains(searchTerm.ToLower())
-                    // Add
-                    ).ToList();
+                var filteredPets = db.Pets.Where(pet =>
+                     pet.PetName.ToLower().Contains(searchTerm.ToLower()) ||
+                     pet.Species.ToLower().Contains(searchTerm.ToLower()) ||
+                     pet.Breed.ToLower().Contains(searchTerm.ToLower())
+                 // Add more criteria
+                 );
 
-               return searchResults;
+                // Appling ToListAsync after filtering for complex scenarios
+                var searchResults = await filteredPets.ToListAsync();
+                return searchResults;
             }
         }
     }

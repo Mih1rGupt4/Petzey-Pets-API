@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace Petzey.WebAPI.Controllers
@@ -18,23 +19,27 @@ namespace Petzey.WebAPI.Controllers
         public IPetsRepository repo = new PetsRepository();
 
         [HttpGet]
-        public IHttpActionResult GetAllPets()
+        public async Task<IHttpActionResult> GetAllPets()
         {
-            List<Pet> pets = repo.getAllPets();
+            List<Pet> pets = await repo.GetAllPetsAsync(); // Call the async method
 
             if (pets.Any())
+            {
                 return Ok(pets);
+            }
             else
+            {
                 return Ok("No pets found ");
+            }
         }
 
        
 
         [HttpGet]
         [Route("searchPets")]
-        public IHttpActionResult SearchPets( string searchTerm)
+        public async Task<IHttpActionResult> SearchPets( string searchTerm)
         {
-            var searchResults = repo.searchPets(searchTerm);
+            var searchResults = await repo.searchPetsAsync(searchTerm);
             if (searchResults.Any())
             {
                 return Ok(searchResults);

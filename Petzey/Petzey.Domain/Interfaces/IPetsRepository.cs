@@ -9,7 +9,7 @@ namespace Petzey.Domain.Interfaces
 {
     public interface IPetsRepository
     {
-        List<Pet> getAllPets();
-        List<Pet> searchPets(string searchTerm);
+        Task<List<Pet>> GetAllPetsAsync();
+        Task<List<Pet>> searchPetsAsync(string searchTerm);
     }
 }
