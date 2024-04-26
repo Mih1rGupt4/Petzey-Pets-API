@@ -1,26 +1,38 @@
 using Petzey.Data;
 using Petzey.Data.Repository;
 using Petzey.Domain.Entities;
+
 using Petzey.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Cors;
+
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Management;
 
 namespace Petzey.WebAPI.Controllers
 {
-    [RoutePrefix("api/pets")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PetsController : ApiController
     {
     
         IPetsRepository _repo;
+        
         public PetsController()
         {
             _repo = new PetsRepository();
+        }
+        
+        [HttpGet]
+        [Route("parentid/{parentId}")]
+        public async Task<IHttpActionResult> GetPetsByPetParentId(int parentId)
+        {
+            var pets = await _repo.GetPetsByPetParentIdAsync(parentId);
         }
         
         [HttpGet]
@@ -67,7 +79,18 @@ namespace Petzey.WebAPI.Controllers
                 return Ok("No pets found matching the search criteria.");
             }
         }
+        
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IHttpActionResult> DeletePet(int id)
+        {
+            bool success = await _repo.DeletePetAsync(id);
 
+            if (!success)
+                return NotFound();
+
+            return Ok($"Pet with ID {id} successfully deleted");
+        }
         //[HttpPost]
         //[Route("filterids")]
         //public async Task<IHttpActionResult> FilterPetsAndIds([FromBody] PetFilterParams filterParams,[FromUri]int[] petIds)

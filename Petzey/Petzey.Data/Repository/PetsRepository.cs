@@ -2,8 +2,6 @@
 using Petzey.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Linq;
@@ -25,6 +23,22 @@ namespace Petzey.Data.Repository
         // Default constructor creates a new PetzeyPetsDbContext instance
         public PetsRepository() : this(new PetzeyPetsDbContext())
         {
+        }
+        
+        public async Task<bool> DeletePetAsync(int petId)
+        {
+            Pet pet = await _db.Pets.FindAsync(petId);
+            if (pet == null)
+                return false;
+
+            _db.Pets.Remove(pet);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<List<Pet>> GetPetsByPetParentIdAsync(int parentId)
+        {
+            return await _db.Pets.Where(p => p.PetParentID == parentId).ToListAsync();
         }
         
         public async Task<List<Pet>> GetAllPetsAsync()
