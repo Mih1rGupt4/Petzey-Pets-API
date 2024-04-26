@@ -12,15 +12,16 @@ namespace Petzey.Data.Repository
 {
     public class PetsRepository : IPetsRepository
     {
-        private readonly PetzeyPetsDbContext _db;
+        private readonly IPetzeyPetsDbContext _db;
 
-        public PetsRepository()
+        public PetsRepository(IPetzeyPetsDbContext db)
         {
-            _db = new PetzeyPetsDbContext();
+            _db = (db ?? throw new ArgumentNullException(nameof(db)));
         }
-        public PetsRepository(PetzeyPetsDbContext db)
+
+        // Default constructor creates a new PetzeyPetsDbContext instance
+        public PetsRepository() : this(new PetzeyPetsDbContext())
         {
-            _db = db;
         }
 
         public async Task<Pet> GetPetDetailsByPetIDAsync(int id)
