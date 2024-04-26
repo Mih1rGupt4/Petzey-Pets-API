@@ -16,7 +16,9 @@ using System.Web.Management;
 
 namespace Petzey.WebAPI.Controllers
 {
+
     [RoutePrefix("api/Pets")]
+
     public class PetsController : ApiController
     {
     
@@ -32,6 +34,14 @@ namespace Petzey.WebAPI.Controllers
         public async Task<IHttpActionResult> GetPetsByPetParentId(int parentId)
         {
             var pets = await _repo.GetPetsByPetParentIdAsync(parentId);
+            if (pets.Any())
+            {
+                return Ok(pets);
+            }
+            else
+            {
+                return Ok("No pets found ");
+            }
         }
         
         [HttpGet]
