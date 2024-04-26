@@ -6,12 +6,10 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.Cors;
 
 namespace Petzey.WebAPI.Controllers
 {
     [RoutePrefix("api/Pets")]
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PetsController : ApiController
     {
         private readonly IPetsRepository _repo;
