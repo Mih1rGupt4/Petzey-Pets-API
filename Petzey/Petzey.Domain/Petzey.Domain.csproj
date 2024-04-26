@@ -57,6 +57,7 @@
     <Compile Include="Entities\Pet.cs" />
     <Compile Include="Exceptions\deleteme.cs" />
     <Compile Include="Interfaces\IPetsRepository.cs" />
+    <Compile Include="Interfaces\IPetzeyPetsDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
