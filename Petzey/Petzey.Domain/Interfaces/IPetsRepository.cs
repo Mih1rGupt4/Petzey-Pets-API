@@ -11,5 +11,6 @@ namespace Petzey.Domain.Interfaces
     {
         Pet AddPet(Pet pet);
         Pet EditPet(Pet pet);
+        List<Pet> GetPetsByIDs(int[] ids);
     }
 }
