@@ -190,10 +190,10 @@ namespace Petzey.WebAPI.Controllers
         }
         [HttpPut]
         [Route("AddLastAppointmentDate/{id}")]
-        public IHttpActionResult addLastAppointmentDate(int id, [FromBody] DateTime date)
+        public async Task<IHttpActionResult> addLastAppointmentDate(int id, [FromBody] DateTime date)
         {
-            var status = _repo.AddLastAppointmentDate(date, id);
-            if (status.IsCompleted)
+            bool status = await  _repo.AddLastAppointmentDate(date, id);
+            if (status)
             {
                 return Ok("Added appointment date to pet");
             }
