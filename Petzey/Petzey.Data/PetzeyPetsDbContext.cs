@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Petzey.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Petzey.Data
         {
 
         }
-
+        
         public DbSet<Pet> Pets { get; set; }
     }
 }
