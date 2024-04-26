@@ -9,9 +9,6 @@ namespace Petzey.Domain.Interfaces
 {
     public interface IPetsRepository
     {
-        Task<bool> DeletePetAsync(int petId);
-        Task<List<Pet>> GetPetsByPetParentIdAsync(int parentId);
-
         Task<List<Pet>> GetAllPetsAsync();
         Task<List<Pet>> searchPetsAsync(string searchTerm);
         Task<List<Pet>> FilterPetsAsync(PetFilterParams petFilterParams);
