@@ -79,17 +79,17 @@ namespace Petzey.Data.Repository
             return await _db.Pets.Where(pet => petIds.Contains(pet.PetID)).ToListAsync();
         }
         
-        public Pet AddPet(Pet pet)
+        public async Task<Pet> AddPet(Pet pet)
         {
             _db.Pets.Add(pet);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return pet;
         }
 
-        public Pet EditPet(Pet pet)
+        public async Task<Pet> EditPet(Pet pet)
         {
             _db.Entry(pet).State = System.Data.Entity.EntityState.Modified;
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return pet;
         }
         
@@ -114,6 +114,28 @@ namespace Petzey.Data.Repository
                                   .Skip((pageNumber - 1) * pageSize)
                                   .Take(pageSize)
                                   .ToListAsync();
+        }
+        public async Task<bool> DeletePetAsync(int petId)
+        {
+            Pet pet = await _db.Pets.FindAsync(petId);
+            if (pet == null)
+                return false;
+
+            _db.Pets.Remove(pet);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        
+        public async Task<bool> AddLastAppointmentDate(DateTime date, int id)
+        {
+            var pet = _db.Pets.Find(id);
+            pet.LastAppointmentDate = date;
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        public async Task<List<Pet>> GetPetsByPetParentIdAsync(int parentId)
+        {
+            return await _db.Pets.Where(p => p.PetParentID == parentId).ToListAsync();
         }
     }
 }

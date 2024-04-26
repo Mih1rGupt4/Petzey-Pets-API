@@ -22,5 +22,6 @@ namespace Petzey.Domain.Entities
         public string Age { get; set; }
         public string BloodGroup { get; set; }
         public string Allergies { get; set; }
+        public DateTime LastAppointmentDate { get; set; }
     }
 }

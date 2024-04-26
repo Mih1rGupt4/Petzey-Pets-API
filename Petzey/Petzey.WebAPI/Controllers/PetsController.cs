@@ -1,5 +1,6 @@
 using Petzey.Data;
 using Petzey.Data.Repository;
+using Petzey.Domain.Dtos;
 using Petzey.Domain.Entities;
 using Petzey.Domain.Interfaces;
 using System;
@@ -127,6 +128,7 @@ namespace Petzey.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Route("addnewpet")]
         public IHttpActionResult AddPet([FromBody] Pet pet)
         {
             var newPet = _repo.AddPet(pet);
@@ -137,13 +139,14 @@ namespace Petzey.WebAPI.Controllers
             return BadRequest("Pet not added!");
         }
         [HttpPost]
-        [Route("api/getPetsByIDs")]
-        public IHttpActionResult GetPetsByIDs([FromBody] int[] ids)
+        [Route("getPetsByIDs")]
+        public IHttpActionResult GetPetsByIDsInPetCardDto([FromBody] int[] ids)
         {
             var petsByIDs = _repo.GetPetsByIDs(ids);
-            if(petsByIDs != null)
+            var petCardDtos = ConvertPetsToCardPetDetailsDto(petsByIDs);
+            if(petCardDtos != null)
             {
-                return Ok(petsByIDs);
+                return Ok(petCardDtos);
             }
             return BadRequest("Pets not found for the given ids");
         }
@@ -159,12 +162,67 @@ namespace Petzey.WebAPI.Controllers
             return BadRequest("edit unsuccessfull");
         }
 
+        [HttpGet]
+        [Route("parentid/{parentId}")]
+        public async Task<IHttpActionResult> GetPetsByPetParentId(int parentId)
+        {
+            var pets = await _repo.GetPetsByPetParentIdAsync(parentId);
+            if (pets.Any())
+            {
+                return Ok(pets);
+            }
+            else
+            {
+                return Ok("No pets found ");
+            }
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IHttpActionResult> DeletePet(int id)
+        {
+            bool success = await _repo.DeletePetAsync(id);
+
+            if (!success)
+                return NotFound();
+
+            return Ok($"Pet with ID {id} successfully deleted");
+        }
+        [HttpPut]
+        [Route("AddLastAppointmentDate/{id}")]
+        public IHttpActionResult addLastAppointmentDate(int id, [FromBody] DateTime date)
+        {
+            var status = _repo.AddLastAppointmentDate(date, id);
+            if (status.IsCompleted)
+            {
+                return Ok("Added appointment date to pet");
+            }
+            return BadRequest("Failed in adding appointment date to pet");
+        }
+
         private IHttpActionResult OkOrNotFound(object obj)
         {
             if(obj == null)
                 return NotFound();
             else
                 return Ok(obj);
+        }
+        private List<CardPetDetailsDto> ConvertPetsToCardPetDetailsDto(List<Pet> pets)
+        {
+            List<CardPetDetailsDto> cardPetDetailsDto = new List<CardPetDetailsDto>();
+            foreach (Pet pet in pets)
+            {
+                cardPetDetailsDto.Add(new CardPetDetailsDto
+                {
+                    PetID = pet.PetID,
+                    PetName = pet.PetName,
+                    PetAge = pet.Age,
+                    PetGender = pet.Gender,
+                    OwnerID = pet.PetParentID,
+                    petImage = pet.PetImage
+                });
+            }
+            return cardPetDetailsDto;
         }
     }
 }
