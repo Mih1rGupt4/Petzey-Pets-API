@@ -58,6 +58,7 @@
     <Compile Include="Dtos\PetDetailsDto.cs" />
     <Compile Include="Dtos\PetGridDetailsDto.cs" />
     <Compile Include="Entities\Pet.cs" />
+    <Compile Include="Dtos\PetFilterParams.cs" />
     <Compile Include="Exceptions\deleteme.cs" />
     <Compile Include="Interfaces\IPetsRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

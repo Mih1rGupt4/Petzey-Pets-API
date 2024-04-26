@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Petzey.Domain.Entities;
+using Petzey.Domain.Interfaces;
 
 namespace Petzey.Data
 {
@@ -13,7 +15,7 @@ namespace Petzey.Data
     {
         public PetzeyPetsDbContext() : base("DefaultConnection")
         {
-            
+
         }
 
         public DbSet<Pet> Pets { get; set; }
