@@ -9,6 +9,12 @@ namespace Petzey.Domain.Interfaces
 {
     public interface IPetsRepository
     {
+        Task<List<Pet>> GetAllPetsAsync();
+        Task<List<Pet>> searchPetsAsync(string searchTerm);
+        Task<List<Pet>> FilterPetsAsync(PetFilterParams petFilterParams);
+
+        Task<List<Pet>> FilterPetsAndIdAsync(PetFilterParams petFilterParams, int[] petIds);
+        Task<List<Pet>> GetPetsByIdsAsync(int[] petIds);
 
         Pet AddPet(Pet pet);
         Pet EditPet(Pet pet);
@@ -16,6 +22,5 @@ namespace Petzey.Domain.Interfaces
 
         Task<Pet> GetPetDetailsByPetIDAsync(int id);
         Task<List<Pet>> GetPetsAsync(int pageNumber, int pageSize);
-
     }
 }
