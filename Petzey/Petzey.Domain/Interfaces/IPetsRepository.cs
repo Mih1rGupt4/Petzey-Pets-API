@@ -9,7 +9,7 @@ namespace Petzey.Domain.Interfaces
 {
     public interface IPetsRepository
     {
-        bool DeletePet(int petId);
-        List<Pet> GetPetsByPetParentId(int parentId);
+        Task<bool> DeletePetAsync(int petId);
+        Task<List<Pet>> GetPetsByPetParentIdAsync(int parentId);
     }
 }

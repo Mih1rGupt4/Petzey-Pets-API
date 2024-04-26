@@ -4,35 +4,45 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Petzey.WebAPI.Controllers
 {
     [RoutePrefix("api/Pets")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PetsController : ApiController
     {
-        private readonly IPetsRepository _repo = new PetsRepository();
+        private readonly IPetsRepository _repo;
+
+        public PetsController()
+        {
+            _repo = new PetsRepository();
+        }
+
 
         [HttpGet]
         [Route("parentid/{parentId}")]
-        public IHttpActionResult GetPetsByPetParentId(int parentId)
+        public async Task<IHttpActionResult> GetPetsByPetParentId(int parentId)
         {
-            var pets = _repo.GetPetsByPetParentId(parentId);
+            var pets = await _repo.GetPetsByPetParentIdAsync(parentId);
             
-            if (pets == null || pets.Count == 0)
+            if (pets.Any())
+            {
+                return Ok(pets);
+            }
+            else
             {
                 return NotFound();
             }
-            else
-                return Ok(pets);
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public IHttpActionResult DeletePet(int id)
+        public async Task<IHttpActionResult> DeletePet(int id)
         {
-            bool success = _repo.DeletePet(id);
+            bool success = await _repo.DeletePetAsync(id);
 
             if (!success)
                 return NotFound();
