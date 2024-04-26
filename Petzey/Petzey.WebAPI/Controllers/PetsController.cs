@@ -106,6 +106,7 @@ namespace Petzey.WebAPI.Controllers
         }
 
         [HttpGet]
+        [Route("details/{id}")]
         public async Task<IHttpActionResult> GetPetDetailsByPetID(int id)
         {
             Pet pet = await _repo.GetPetDetailsByPetIDAsync(id);
