@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Petzey.Domain.Entities
 {
-    internal class Pet
+    public class Pet
     {
         public int PetID { get; set; }
         public int PetParentID { get; set; }

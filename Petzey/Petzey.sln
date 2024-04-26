@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petzey.Data", "Petzey.Data\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petzey.Domain", "Petzey.Domain\Petzey.Domain.csproj", "{7F253FC6-4754-44AD-B6FD-9226BE41B9BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Petzey.Data.UnitTests", "Petzey.Data.UnitTests\Petzey.Data.UnitTests.csproj", "{EDE3E6C3-6FB2-4C66-AB2E-DFB5D1CF083F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{7F253FC6-4754-44AD-B6FD-9226BE41B9BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F253FC6-4754-44AD-B6FD-9226BE41B9BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F253FC6-4754-44AD-B6FD-9226BE41B9BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDE3E6C3-6FB2-4C66-AB2E-DFB5D1CF083F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDE3E6C3-6FB2-4C66-AB2E-DFB5D1CF083F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDE3E6C3-6FB2-4C66-AB2E-DFB5D1CF083F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDE3E6C3-6FB2-4C66-AB2E-DFB5D1CF083F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +47,7 @@ Global
 		{A1C5162F-BBA6-42C7-B655-391656D85341} = {9B3AD3D1-2731-4DA9-ABBB-5E9182D0D3A1}
 		{946AED8A-C7D3-494C-973D-1BA99AF4E295} = {A443A0E6-22E6-41C1-8F51-33C45F0AADAA}
 		{7F253FC6-4754-44AD-B6FD-9226BE41B9BD} = {7AE73B95-965E-4A8F-BA69-3EB5D55679F4}
+		{EDE3E6C3-6FB2-4C66-AB2E-DFB5D1CF083F} = {A443A0E6-22E6-41C1-8F51-33C45F0AADAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBD3423D-E1D4-47F3-9CA1-7C7A6C7B96BD}
