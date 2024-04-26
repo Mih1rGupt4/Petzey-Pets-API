@@ -15,9 +15,9 @@ namespace Petzey.Data.Repository
 {
     public class PetsRepository : IPetsRepository
     {  
-        private readonly IPetzeyPetsDbContext _db;
+        private readonly PetzeyPetsDbContext _db;
 
-        public PetsRepository(IPetzeyPetsDbContext db)
+        public PetsRepository(PetzeyPetsDbContext db)
         {
             _db = (db ?? throw new ArgumentNullException(nameof(db)));
         }

@@ -10,7 +10,7 @@ using Petzey.Domain.Interfaces;
 
 namespace Petzey.Data
 {
-    public class PetzeyPetsDbContext : DbContext, IPetzeyPetsDbContext
+    public class PetzeyPetsDbContext : DbContext
     {
         public PetzeyPetsDbContext() : base("DefaultConnection")
         {
