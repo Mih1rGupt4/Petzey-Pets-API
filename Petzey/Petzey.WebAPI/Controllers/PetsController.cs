@@ -21,12 +21,12 @@ namespace Petzey.WebAPI.Controllers
         IPetsRepository _repo;
         public PetsController() : this(new PetsRepository())
         {
-            _repo = new PetsRepository();
+
         }
 
         public PetsController(IPetsRepository repo)
         {
-            _repo = repo;
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
 
         [HttpGet]
