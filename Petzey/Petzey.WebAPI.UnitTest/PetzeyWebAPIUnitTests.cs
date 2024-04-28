@@ -274,5 +274,129 @@ namespace Petzey.WebAPI.UnitTest
             Assert.IsInstanceOfType(result, typeof(BadRequestResult));
         }
 
+        [TestMethod]
+        public async Task AddLastAppointmentDate_WhenAddingDateIsSuccessful_ReturnsOk()
+        {
+            // Arrange
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.AddLastAppointmentDate(It.IsAny<DateTime>(), It.IsAny<int>())).ReturnsAsync(true);
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult result = await controller.addLastAppointmentDate(1, DateTime.Now);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+        }
+
+        [TestMethod]
+        public async Task AddLastAppointmentDate_WhenAddingDateIsUnsuccessful_ReturnsBadRequest()
+        {
+            // Arrange
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.AddLastAppointmentDate(It.IsAny<DateTime>(), It.IsAny<int>())).ReturnsAsync(false);
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult result = await controller.addLastAppointmentDate(1, DateTime.Now);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(BadRequestResult));
+        }
+
+
+        [TestMethod]
+        public async Task DeletePet_WhenPetIsDeleted_ReturnsOk()
+        {
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.DeletePetAsync(It.IsAny<int>())).ReturnsAsync(true);
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult result = await controller.DeletePet(1);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkNegotiatedContentResult<string>));
+        }
+
+        [TestMethod]
+        public async Task DeletePet_WhenPetIsNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.DeletePetAsync(It.IsAny<int>())).ReturnsAsync(false);
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult result = await controller.DeletePet(1);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public async Task GetPetsByParentId_WhenPetsAreFound_ReturnsOk()
+        {
+            // Arrange
+            int parentId = 1;
+            var mockRepo = new Mock<IPetsRepository>();
+            Pet test_pet = new Pet
+            {
+                PetID = parentId,
+                PetParentID = 1001,
+                PetName = "Fluffy_edited",
+                PetImage = new byte[0],
+                Species = "Dog",
+                Breed = "Labrador Retriever",
+                Gender = "Male",
+                DateOfBirth = new DateTime(2019, 5, 15),
+                Age = "5 years",
+                BloodGroup = "A+",
+                Allergies = "None",
+                LastAppointmentDate = DateTime.Now.AddDays(-30)
+            };
+            mockRepo.Setup(repo => repo.GetPetsByPetParentIdAsync(parentId)).ReturnsAsync(new List<Pet> {test_pet});
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult result = await controller.GetPetsByPetParentId(parentId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkNegotiatedContentResult<List<Pet>>));
+
+            var contentResult = result as OkNegotiatedContentResult<List<Pet>>;
+            Assert.IsNotNull(contentResult.Content);
+            Assert.AreEqual(new List<Pet> { test_pet },contentResult.Content);           
+        }
+
+
+        [TestMethod]
+        public async Task GetPetsByParentID_WhenPetsAreNotFound_ReturnsNotFound()
+        {
+            // Arrange
+            int parentId = 1;
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.GetPetsByPetParentIdAsync(parentId)).ReturnsAsync(new List<Pet>());
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult result = await controller.GetPetsByPetParentId(parentId);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
     }
 }

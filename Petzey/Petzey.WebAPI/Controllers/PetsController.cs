@@ -179,7 +179,7 @@ namespace Petzey.WebAPI.Controllers
             }
             else
             {
-                return Ok("No pets found ");
+                return NotFound();
             }
         }
 
