@@ -19,11 +19,16 @@ namespace Petzey.WebAPI.Controllers
     {
     
         IPetsRepository _repo;
-        public PetsController()
+        public PetsController() : this(new PetsRepository())
         {
-            _repo = new PetsRepository();
+
         }
-        
+
+        public PetsController(IPetsRepository repo)
+        {
+            _repo = repo ?? throw new ArgumentNullException(nameof(repo));
+        }
+
         [HttpGet]
         public async Task<IHttpActionResult> GetAllPets()
         {
@@ -201,7 +206,7 @@ namespace Petzey.WebAPI.Controllers
             return BadRequest("Failed in adding appointment date to pet");
         }
 
-        private IHttpActionResult OkOrNotFound(object obj)
+        public IHttpActionResult OkOrNotFound(object obj)
         {
             if(obj == null)
                 return NotFound();

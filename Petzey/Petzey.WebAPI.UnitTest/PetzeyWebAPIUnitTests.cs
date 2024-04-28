@@ -1,25 +1,40 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Petzey.Data.Repository;
-using Petzey.Domain.Entities;
 using System;
 using System.Threading.Tasks;
+using Petzey.Domain.Interfaces;
+using Petzey.Domain.Entities;
 using System.Collections.Generic;
 using Petzey.WebAPI.Controllers;
+using Petzey.Data.Repository;
+using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace Petzey.WebAPI.UnitTest
 {
     [TestClass]
     public class PetzeyWebAPIUnitTests
     {
-        //[TestMethod]
-        //public async Task GetAllPets_WithValidInputs_ReturnsOk()
-        //{
-        //    var mockRepo = new Mock<PetsRepository>();
-        //    mockRepo.Setup(repo => repo.GetAllPetsAsync()).ReturnsAsync(new List<Pet> { new Pet { PetID = 1, PetParentID = 2,PetName="test_name", Age = "2" } });
-        //    var controller = new PetsController();
-        //    var result = await controller.GetAllPets(
+        [TestMethod]
+        public void TestMethod1()
+        {
 
-        //}
+        }
+
+        [TestMethod]
+        public void OkOrNotFound_Returns_NotFound_When_Object_Is_Null()
+        {
+            // Arrange
+            var controller = new PetsController();
+
+            // Act
+            IHttpActionResult actionResult = controller.OkOrNotFound(null);
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));
+        }
+
+        
+
     }
 }
