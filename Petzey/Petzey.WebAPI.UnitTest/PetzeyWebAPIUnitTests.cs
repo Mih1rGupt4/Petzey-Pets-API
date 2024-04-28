@@ -112,7 +112,7 @@ namespace Petzey.WebAPI.UnitTest
         [TestMethod]
         public async Task GetAllPets_WithPets_ReturnOk()
         {
-            var mockRepo = new Mock<PetsRepository>();
+            var mockRepo = new Mock<IPetsRepository>();
             mockRepo.Setup(repo => repo.GetAllPetsAsync()).ReturnsAsync(new List<Pet> { new Pet { PetID = 1, PetParentID = 2, Species = "Dog", Breed = "Pug", PetName = "name_test", Age = "2" } });
 
             var controller = new PetsController(mockRepo.Object);
@@ -136,7 +136,7 @@ namespace Petzey.WebAPI.UnitTest
         public async Task GetAllPets_WithoutPets_ReturnsBadRequest()
         {
             //Arrange
-            var mockRepo = new Mock<PetsRepository>();
+            var mockRepo = new Mock<IPetsRepository>();
             mockRepo.Setup(repo => repo.GetAllPetsAsync()).ReturnsAsync(new List<Pet>());
             var controller = new PetsController(mockRepo.Object);
 
@@ -148,6 +148,69 @@ namespace Petzey.WebAPI.UnitTest
             Assert.IsInstanceOfType(result, typeof(BadRequestResult));
         }
 
+        [TestMethod]
+        public void AddPets_WhenPetIsAdded_ReturnsOk()
+        {
+            //Arrange
+            var mockRepo = new Mock<IPetsRepository>();
+            Pet test_pet = new Pet
+            {
+                PetID = 1,
+                PetParentID = 1001,
+                PetName = "Fluffy",
+                PetImage = new byte[0],
+                Species = "Dog",
+                Breed = "Labrador Retriever",
+                Gender = "Male",
+                DateOfBirth = new DateTime(2019, 5, 15),
+                Age = "5 years",
+                BloodGroup = "A+",
+                Allergies = "None",
+                LastAppointmentDate = DateTime.Now.AddDays(-30)
+            };
+            mockRepo.Setup(repo => repo.AddPet(It.IsAny<Pet>())).ReturnsAsync(test_pet);
+            var controller = new PetsController(mockRepo.Object);
+
+            //Act
+            IHttpActionResult result = controller.AddPet(test_pet);
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+
+        }
+
+        [TestMethod]
+        public void AddPets_WhenPetIsNotAdded_ReturnsBadRequest()
+        {
+            //Arrange
+            Pet test_pet = new Pet
+            {
+                PetID = 1,
+                PetParentID = 1001,
+                PetName = "Fluffy",
+                PetImage = new byte[0],
+                Species = "Dog",
+                Breed = "Labrador Retriever",
+                Gender = "Male",
+                DateOfBirth = new DateTime(2019, 5, 15),
+                Age = "5 years",
+                BloodGroup = "A+",
+                Allergies = "None",
+                LastAppointmentDate = DateTime.Now.AddDays(-30)
+            };
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.AddPet(It.IsAny<Pet>())).ReturnsAsync((Pet)null); // Simulate failed addition
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult result = controller.AddPet(test_pet);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(BadRequestResult));
+        }
 
     }
 }
