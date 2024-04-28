@@ -212,5 +212,67 @@ namespace Petzey.WebAPI.UnitTest
             Assert.IsInstanceOfType(result, typeof(BadRequestResult));
         }
 
+        [TestMethod]
+        public void EditPet_WhenPetDataIsEdited_ReturnsOk()
+        {
+            var mockRepo = new Mock<IPetsRepository>();
+            Pet test_pet = new Pet
+            {
+                PetID = 1,
+                PetParentID = 1001,
+                PetName = "Fluffy_edited",
+                PetImage = new byte[0],
+                Species = "Dog",
+                Breed = "Labrador Retriever",
+                Gender = "Male",
+                DateOfBirth = new DateTime(2019, 5, 15),
+                Age = "5 years",
+                BloodGroup = "A+",
+                Allergies = "None",
+                LastAppointmentDate = DateTime.Now.AddDays(-30)
+            };
+            mockRepo.Setup(repo => repo.EditPet(It.IsAny<Pet>())).ReturnsAsync(test_pet);
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult result = controller.EditPet(test_pet);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+        }
+
+        [TestMethod]
+        public void EditPet_WhenPetDataEditFails_ReturnsBadRequest()
+        {
+            var mockRepo = new Mock<IPetsRepository>();
+            Pet test_pet = new Pet
+            {
+                PetID = 1,
+                PetParentID = 1001,
+                PetName = "Fluffy_edited",
+                PetImage = new byte[0],
+                Species = "Dog",
+                Breed = "Labrador Retriever",
+                Gender = "Male",
+                DateOfBirth = new DateTime(2019, 5, 15),
+                Age = "5 years",
+                BloodGroup = "A+",
+                Allergies = "None",
+                LastAppointmentDate = DateTime.Now.AddDays(-30)
+            };
+            mockRepo.Setup(repo => repo.EditPet(It.IsAny<Pet>())).ReturnsAsync((Pet)null); // Simulate failed edit
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult result = controller.EditPet(test_pet);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(BadRequestResult));
+        }
+
     }
 }
