@@ -1,4 +1,5 @@
 ﻿using Petzey.Domain.Entities;
+using Petzey.Domain.Dtos;
 using Petzey.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,44 @@ namespace Petzey.Data.Repository
             && (p.Species.Contains(petFilterParams.Species) || petFilterParams.Species == null)
             && (petFilterParams.PetIds.Contains(p.PetID) || !petFilterParams.PetIds.Any())).ToListAsync();
             return filteredPets.ToList();
+        }
+
+        //public async Task<List<Pet>> FilterPetsPerPageAsync(PetFilterParams petFilterParams, int pageNumber, int pageSize)
+        //{
+        //    var filteredPets = await _db.Pets.Where(p => (p.PetName.Contains(petFilterParams.PetName) || petFilterParams.PetName == null)
+        //    && (p.Species.Contains(petFilterParams.Species) || petFilterParams.Species == null)
+        //    && (petFilterParams.PetIds.Contains(p.PetID) || !petFilterParams.PetIds.Any())).ToListAsync();
+
+        //    return filteredPets.OrderBy(p => p.PetID)
+        //        .Skip((pageNumber - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .ToList();
+        //}
+
+        public async Task<List<Pet>> FilterPetsPerPageAsync(PetFilterParams petFilterParams, int pageNumber, int pageSize)
+        {
+            IQueryable<Pet> query = _db.Pets;
+
+            // Filter by pet name
+            if (!string.IsNullOrEmpty(petFilterParams.PetName))
+                query = query.Where(p => p.PetName.Contains(petFilterParams.PetName));
+
+            // Filter by species
+            if (!string.IsNullOrEmpty(petFilterParams.Species))
+                query = query.Where(p => p.Species.Contains(petFilterParams.Species));
+
+            // Filter by pet IDs
+            if (petFilterParams.PetIds != null && petFilterParams.PetIds.Any())
+                query = query.Where(p => petFilterParams.PetIds.Contains(p.PetID));
+            
+
+            // Paginate and materialize
+            List<Pet> filteredPets = await query.OrderBy(p => p.PetID)
+                                                 .Skip((pageNumber - 1) * pageSize)
+                                                 .Take(pageSize)
+                                                 .ToListAsync();
+
+            return filteredPets;
         }
 
         public async Task<List<Pet>> FilterPetsAndIdAsync(PetFilterParams petFilterParams,int[] petIds)
