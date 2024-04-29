@@ -214,22 +214,24 @@ namespace Petzey.WebAPI.Controllers
             else
                 return Ok(obj);
         }
-        private List<CardPetDetailsDto> ConvertPetsToCardPetDetailsDto(List<Pet> pets)
+
+        public List<CardPetDetailsDto> ConvertPetsToCardPetDetailsDto(List<Pet> pets)
         {
-            List<CardPetDetailsDto> cardPetDetailsDto = new List<CardPetDetailsDto>();
-            foreach (Pet pet in pets)
+            if (pets == null)
             {
-                cardPetDetailsDto.Add(new CardPetDetailsDto
-                {
-                    PetID = pet.PetID,
-                    PetName = pet.PetName,
-                    PetAge = pet.Age,
-                    PetGender = pet.Gender,
-                    OwnerID = pet.PetParentID,
-                    petImage = pet.PetImage
-                });
+                return null; // Return null if pets is null
             }
-            return cardPetDetailsDto;
+
+            return pets.Select(pet => new CardPetDetailsDto
+            {
+                PetID = pet.PetID,
+                PetName = pet.PetName,
+                PetAge = pet.Age,
+                PetGender = pet.Gender,
+                OwnerID = pet.PetParentID,
+                petImage = pet.PetImage
+            }).ToList();
         }
+
     }
 }

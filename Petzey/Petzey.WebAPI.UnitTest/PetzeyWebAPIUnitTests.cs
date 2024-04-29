@@ -396,5 +396,64 @@ namespace Petzey.WebAPI.UnitTest
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
 
+        [TestMethod]
+        public void ConvertPetsToCardPetDetailsDto_Converts_Pets_To_CardPetDetailsDto()
+        {
+            // Arrange
+            var controller = new PetsController(); // No need for a mock in this case
+            var pets = new List<Pet>
+            {
+                new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
+                new Pet { PetID = 2, PetName = "Fluffy", Age = "5", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
+                // Add more sample pets if needed
+            };
+
+            // Act
+            var result = controller.ConvertPetsToCardPetDetailsDto(pets);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(pets.Count, result.Count);
+
+            for (int i = 0; i < pets.Count; i++)
+            {
+                Assert.AreEqual(pets[i].PetID, result[i].PetID);
+                Assert.AreEqual(pets[i].PetName, result[i].PetName);
+                Assert.AreEqual(pets[i].Age, result[i].PetAge);
+                Assert.AreEqual(pets[i].Gender, result[i].PetGender);
+                Assert.AreEqual(pets[i].PetParentID, result[i].OwnerID);
+                // Assert.AreEqual(pets[i].PetImage, result[i].petImage); // Asserting byte arrays might need a custom comparer
+            }
+        }
+
+        [TestMethod]
+        public void ConvertPetsToCardPetDetailsDto_Returns_Null_When_Pets_Is_Null()
+        {
+            // Arrange
+            var controller = new PetsController(); // Assuming no dependencies needed
+            List<Pet> pets = null;
+
+            // Act
+            var result = controller.ConvertPetsToCardPetDetailsDto(pets);
+
+            // Assert
+            Assert.IsNull(result); // Assert that the result is null
+        }
+
+        [TestMethod]
+        public void ConvertPetsToCardPetDetailsDto_Returns_Empty_List_When_Pets_Is_Empty()
+        {
+            // Arrange
+            var controller = new PetsController(); // Assuming no dependencies needed
+            List<Pet> pets = new List<Pet>(); // Empty list
+
+            // Act
+            var result = controller.ConvertPetsToCardPetDetailsDto(pets);
+
+            // Assert
+            Assert.IsNotNull(result); // Assert that the result is not null
+            Assert.AreEqual(0, result.Count); // Assert that the result is an empty list
+        }
+
     }
 }
