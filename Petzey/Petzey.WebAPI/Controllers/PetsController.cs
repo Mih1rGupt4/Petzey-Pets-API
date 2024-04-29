@@ -19,10 +19,10 @@ namespace Petzey.WebAPI.Controllers
     {
     
         IPetsRepository _repo;
-        public PetsController() : this(new PetsRepository())
-        {
+        //public PetsController() : this(new PetsRepository())
+        //{
 
-        }
+        //}
 
         public PetsController(IPetsRepository repo)
         {
