@@ -143,7 +143,7 @@ namespace Petzey.WebAPI.UnitTest
         }
 
         [TestMethod]
-        public void AddPets_WhenPetIsAdded_ReturnsOk()
+        public async Task AddPets_WhenPetIsAdded_ReturnsOk()
         {
             //Arrange
             var mockRepo = new Mock<IPetsRepository>();
@@ -166,16 +166,16 @@ namespace Petzey.WebAPI.UnitTest
             var controller = new PetsController(mockRepo.Object);
 
             //Act
-            IHttpActionResult result = controller.AddPet(test_pet);
+            IHttpActionResult result = await controller.AddPet(test_pet);
 
             //Assert
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.IsInstanceOfType(result, typeof(OkNegotiatedContentResult<String>));
 
         }
 
         [TestMethod]
-        public void AddPets_WhenPetIsNotAdded_ReturnsBadRequest()
+        public async Task AddPets_WhenPetIsNotAdded_ReturnsBadRequest()
         {
             //Arrange
             Pet test_pet = new Pet
@@ -199,11 +199,13 @@ namespace Petzey.WebAPI.UnitTest
             var controller = new PetsController(mockRepo.Object);
 
             // Act
-            IHttpActionResult result = controller.AddPet(test_pet);
+            IHttpActionResult result = await controller.AddPet(test_pet);
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(BadRequestResult));
+            //Assert.IsNotNull(result);
+            //Assert.IsInstanceOfType(result, typeof(BadRequestResult));
+            Assert.IsInstanceOfType(result, typeof(BadRequestErrorMessageResult));
+
         }
 
         [TestMethod]

@@ -135,9 +135,9 @@ namespace Petzey.WebAPI.Controllers
 
         [HttpPost]
         [Route("addnewpet")]
-        public IHttpActionResult AddPet([FromBody] Pet pet)
+        public async Task<IHttpActionResult> AddPet([FromBody] Pet pet)
         {
-            var newPet = _repo.AddPet(pet);
+            var newPet = await _repo.AddPet(pet);
             if(newPet != null)
             {
                 return Ok("New Pet added");
