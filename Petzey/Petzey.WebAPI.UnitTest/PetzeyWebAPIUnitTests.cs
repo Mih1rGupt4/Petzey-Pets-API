@@ -21,7 +21,7 @@ namespace Petzey.WebAPI.UnitTest
         public void OkOrNotFound_Returns_NotFound_When_Object_Is_Null()
         {
             // Arrange
-            var controller = new PetsController();
+            var controller = new PetsController(new PetsRepository());
 
             // Act
             IHttpActionResult actionResult = controller.OkOrNotFound(null);
@@ -34,7 +34,7 @@ namespace Petzey.WebAPI.UnitTest
         public void OkOrNotFound_Returns_Ok_When_Object_Is_Not_Null()
         {
             // Arrange
-            var controller = new PetsController();
+            var controller = new PetsController(new PetsRepository());
             var testObject = new object(); // You can replace this with any object
 
             // Act
@@ -401,7 +401,7 @@ namespace Petzey.WebAPI.UnitTest
         public async Task ConvertPetsToCardPetDetailsDto_Converts_Pets_To_CardPetDetailsDto()
         {
             // Arrange
-            var controller = new PetsController(); // No need for a mock in this case
+            var controller = new PetsController(new PetsRepository()); // No need for a mock in this case
             var pets = new List<Pet>
     {
         new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
@@ -431,7 +431,7 @@ namespace Petzey.WebAPI.UnitTest
         public async Task ConvertPetsToCardPetDetailsDto_Returns_Null_When_Pets_Is_Null()
         {
             // Arrange
-            var controller = new PetsController(); // Assuming no dependencies needed
+            var controller = new PetsController(new PetsRepository()); // Assuming no dependencies needed
             List<Pet> pets = null;
 
             // Act
@@ -445,7 +445,7 @@ namespace Petzey.WebAPI.UnitTest
         public async Task ConvertPetsToCardPetDetailsDto_Returns_Empty_List_When_Pets_Is_Empty()
         {
             // Arrange
-            var controller = new PetsController(); // Assuming no dependencies needed
+            var controller = new PetsController(new PetsRepository()); // Assuming no dependencies needed
             List<Pet> pets = new List<Pet>(); // Empty list
 
             // Act
@@ -460,7 +460,7 @@ namespace Petzey.WebAPI.UnitTest
         public async Task GetPetsByIDsInPetCardDto_Returns_BadRequest_When_Ids_Null()
         {
             // Arrange
-            var controller = new PetsController();
+            var controller = new PetsController(new PetsRepository());
 
             // Act
             var result = await controller.GetPetsByIDsInPetCardDto(null);
@@ -474,7 +474,7 @@ namespace Petzey.WebAPI.UnitTest
         public async Task GetPetsByIDsInPetCardDto_Returns_BadRequest_When_Ids_Empty()
         {
             // Arrange
-            var controller = new PetsController();
+            var controller = new PetsController(new PetsRepository());
 
             // Act
             var result = await controller.GetPetsByIDsInPetCardDto(new int[0]);
