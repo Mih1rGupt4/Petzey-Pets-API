@@ -257,7 +257,7 @@ namespace Petzey.WebAPI.UnitTest
                 Allergies = "None",
                 LastAppointmentDate = DateTime.Now.AddDays(-30)
             };
-            mockRepo.Setup(repo => repo.EditPet(It.IsAny<Pet>())).ReturnsAsync((Pet)null); // Simulate failed edit
+            mockRepo.Setup(repo => repo.EditPet(test_pet)).ReturnsAsync((Pet)null); // Simulate failed edit
 
             var controller = new PetsController(mockRepo.Object);
 
@@ -265,8 +265,9 @@ namespace Petzey.WebAPI.UnitTest
             IHttpActionResult result = controller.EditPet(test_pet);
             var content = result as BadRequestErrorMessageResult;
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(content, typeof(BadRequestErrorMessageResult));
+            //Assert.IsNotNull(content);
+            //Assert.IsNotNull(content.Message);
+            Assert.IsInstanceOfType(result, typeof(BadRequestErrorMessageResult));
         }
 
         [TestMethod]
