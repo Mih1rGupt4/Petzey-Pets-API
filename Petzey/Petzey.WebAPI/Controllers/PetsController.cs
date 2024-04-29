@@ -40,7 +40,7 @@ namespace Petzey.WebAPI.Controllers
             }
             else
             {
-                return BadRequest("No pets found ");
+                return BadRequest();
             }
         }
 

@@ -17,12 +17,6 @@ namespace Petzey.WebAPI.UnitTest
     public class PetzeyWebAPIUnitTests
     {
         [TestMethod]
-        public void TestMethod1()
-        {
-
-        }
-
-        [TestMethod]
         public void OkOrNotFound_Returns_NotFound_When_Object_Is_Null()
         {
             // Arrange
@@ -343,15 +337,15 @@ namespace Petzey.WebAPI.UnitTest
         }
 
         [TestMethod]
-        public async Task GetPetsByParentId_WhenPetsAreFound_ReturnsOk()
+        public async Task GetPetsByParentID_WhenPetsAreFound_ReturnsOk()
         {
             // Arrange
             int parentId = 1;
             var mockRepo = new Mock<IPetsRepository>();
             Pet test_pet = new Pet
             {
-                PetID = parentId,
-                PetParentID = 1001,
+                PetID = 1,
+                PetParentID = parentId,
                 PetName = "Fluffy_edited",
                 PetImage = new byte[0],
                 Species = "Dog",
@@ -363,7 +357,8 @@ namespace Petzey.WebAPI.UnitTest
                 Allergies = "None",
                 LastAppointmentDate = DateTime.Now.AddDays(-30)
             };
-            mockRepo.Setup(repo => repo.GetPetsByPetParentIdAsync(parentId)).ReturnsAsync(new List<Pet> {test_pet});
+            List<Pet> Pets = new List<Pet> { test_pet };
+            mockRepo.Setup(repo => repo.GetPetsByPetParentIdAsync(parentId)).ReturnsAsync(Pets);
 
             var controller = new PetsController(mockRepo.Object);
 
@@ -376,7 +371,7 @@ namespace Petzey.WebAPI.UnitTest
 
             var contentResult = result as OkNegotiatedContentResult<List<Pet>>;
             Assert.IsNotNull(contentResult.Content);
-            Assert.AreEqual(new List<Pet> { test_pet },contentResult.Content);           
+            Assert.AreEqual(Pets,contentResult.Content);           
         }
 
 
