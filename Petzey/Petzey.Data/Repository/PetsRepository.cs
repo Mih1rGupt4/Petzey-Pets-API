@@ -63,7 +63,7 @@ namespace Petzey.Data.Repository
             var filteredPets =await _db.Pets.Where(p => (p.PetName.Contains(petFilterParams.PetName) || petFilterParams.PetName == null)
             && (p.Species.Contains(petFilterParams.Species) || petFilterParams.Species == null)
             && (petFilterParams.PetIds.Contains(p.PetID) || !petFilterParams.PetIds.Any())).ToListAsync();
-            return filteredPets;
+            return filteredPets.ToList();
         }
 
         public async Task<List<Pet>> FilterPetsAndIdAsync(PetFilterParams petFilterParams,int[] petIds)
@@ -76,9 +76,19 @@ namespace Petzey.Data.Repository
 
         public async Task<List<Pet>> GetPetsByIdsAsync(int[] petIds)
         {
-            return await _db.Pets.Where(pet => petIds.Contains(pet.PetID)).ToListAsync();
+
+            // Perform the query
+            var pets = await _db.Pets
+                .Where(pet => petIds.Contains(pet.PetID))
+                .ToListAsync();
+
+            // If no pets are found, return null
+            if (pets.Count == 0)
+                return null;
+
+            return pets;
         }
-        
+
         public async Task<Pet> AddPet(Pet pet)
         {
             _db.Pets.Add(pet);
@@ -103,12 +113,16 @@ namespace Petzey.Data.Repository
             return null;
         }
 
-        public List<Pet> GetPetsByIDs(int[] ids)
+        public async Task<List<Pet>> GetPetsByIDs(int[] ids)
         {
             List<Pet> petsByID = new List<Pet>();
             foreach (int id in ids)
             {
-                petsByID.Add(_db.Pets.Find(id));
+                Pet pet = await _db.Pets.FirstOrDefaultAsync(p => p.PetID == id);
+                if (pet != null)
+                {
+                    petsByID.Add(pet);
+                }
             }
             return petsByID;
         }

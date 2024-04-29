@@ -10,6 +10,7 @@ using Petzey.Data.Repository;
 using System.Web.Http;
 using System.Web.Http.Results;
 using System.Linq;
+using Petzey.Domain.Dtos;
 
 namespace Petzey.WebAPI.UnitTest
 {
@@ -397,19 +398,19 @@ namespace Petzey.WebAPI.UnitTest
         }
 
         [TestMethod]
-        public void ConvertPetsToCardPetDetailsDto_Converts_Pets_To_CardPetDetailsDto()
+        public async Task ConvertPetsToCardPetDetailsDto_Converts_Pets_To_CardPetDetailsDto()
         {
             // Arrange
             var controller = new PetsController(); // No need for a mock in this case
             var pets = new List<Pet>
-            {
-                new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
-                new Pet { PetID = 2, PetName = "Fluffy", Age = "5", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
-                // Add more sample pets if needed
-            };
+    {
+        new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
+        new Pet { PetID = 2, PetName = "Fluffy", Age = "5", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
+        // Add more sample pets if needed
+    };
 
             // Act
-            var result = controller.ConvertPetsToCardPetDetailsDto(pets);
+            var result = await controller.ConvertPetsToCardPetDetailsDtoAsync(pets);
 
             // Assert
             Assert.IsNotNull(result);
@@ -427,33 +428,275 @@ namespace Petzey.WebAPI.UnitTest
         }
 
         [TestMethod]
-        public void ConvertPetsToCardPetDetailsDto_Returns_Null_When_Pets_Is_Null()
+        public async Task ConvertPetsToCardPetDetailsDto_Returns_Null_When_Pets_Is_Null()
         {
             // Arrange
             var controller = new PetsController(); // Assuming no dependencies needed
             List<Pet> pets = null;
 
             // Act
-            var result = controller.ConvertPetsToCardPetDetailsDto(pets);
+            var result = await controller.ConvertPetsToCardPetDetailsDtoAsync(pets);
 
             // Assert
             Assert.IsNull(result); // Assert that the result is null
         }
 
         [TestMethod]
-        public void ConvertPetsToCardPetDetailsDto_Returns_Empty_List_When_Pets_Is_Empty()
+        public async Task ConvertPetsToCardPetDetailsDto_Returns_Empty_List_When_Pets_Is_Empty()
         {
             // Arrange
             var controller = new PetsController(); // Assuming no dependencies needed
             List<Pet> pets = new List<Pet>(); // Empty list
 
             // Act
-            var result = controller.ConvertPetsToCardPetDetailsDto(pets);
+            var result = await controller.ConvertPetsToCardPetDetailsDtoAsync(pets);
 
             // Assert
             Assert.IsNotNull(result); // Assert that the result is not null
             Assert.AreEqual(0, result.Count); // Assert that the result is an empty list
         }
 
+        [TestMethod]
+        public async Task GetPetsByIDsInPetCardDto_Returns_BadRequest_When_Ids_Null()
+        {
+            // Arrange
+            var controller = new PetsController();
+
+            // Act
+            var result = await controller.GetPetsByIDsInPetCardDto(null);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestErrorMessageResult));
+            Assert.AreEqual("No IDs provided", ((BadRequestErrorMessageResult)result).Message);
+        }
+
+        [TestMethod]
+        public async Task GetPetsByIDsInPetCardDto_Returns_BadRequest_When_Ids_Empty()
+        {
+            // Arrange
+            var controller = new PetsController();
+
+            // Act
+            var result = await controller.GetPetsByIDsInPetCardDto(new int[0]);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestErrorMessageResult));
+            Assert.AreEqual("No IDs provided", ((BadRequestErrorMessageResult)result).Message);
+        }
+
+        [TestMethod]
+        public async Task GetPetsByIDsInPetCardDto_Returns_BadRequest_When_Pets_Not_Found()
+        {
+            // Arrange
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.GetPetsByIdsAsync(It.IsAny<int[]>())).ReturnsAsync((List<Pet>)null); // No pets found
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            var result = await controller.GetPetsByIDsInPetCardDto(new[] { 1, 2, 3 });
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestErrorMessageResult));
+            Assert.AreEqual("Pets not found for the given ids", ((BadRequestErrorMessageResult)result).Message);
+        }
+
+
+        [TestMethod]
+        public async Task GetPetsByIDsInPetCardDto_Returns_Ok_With_CardPetDetailsDto_When_Pets_Found()
+        {
+            // Arrange
+            var pets = new List<Pet>
+            {
+                new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
+                new Pet { PetID = 2, PetName = "Fluffy", Age = "5", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
+            };
+
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.GetPetsByIdsAsync(It.IsAny<int[]>())).ReturnsAsync(pets);
+
+            var controller = new PetsController(mockRepo.Object); // Use actual PetsController, not mock
+
+            // Act
+            var result = await controller.GetPetsByIDsInPetCardDto(new[] { 1, 2, 3 });
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(OkNegotiatedContentResult<List<CardPetDetailsDto>>));
+
+            // Verify that GetPetsByIdsAsync is called with the correct parameter
+            mockRepo.Verify(repo => repo.GetPetsByIdsAsync(new[] { 1, 2, 3 }), Times.Once);
+        }
+
+
+        [TestMethod]
+        public async Task FilterPets_Returns_Ok_With_FilteredPets_When_Pets_Found()
+        {
+            // Arrange
+            var filterParams = new PetFilterParams
+            {
+                PetName = "Fido",
+                Species = "Dog",
+                PetIds = new int[] { 1, 2, 3 }
+            };
+
+            var filteredPets = new List<Pet>
+    {
+        new Pet { PetID = 1, PetName = "Fido", Species = "Dog", /* Add other properties as needed */ },
+        new Pet { PetID = 2, PetName = "Fido", Species = "Dog", /* Add other properties as needed */ }
+    };
+
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.FilterPetsAsync(filterParams)).ReturnsAsync(filteredPets);
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            var result = await controller.FilterPets(filterParams) as OkNegotiatedContentResult<List<Pet>>;
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(filteredPets.Count, result.Content.Count);
+            // Add more assertions to check each property of the pets if needed
+        }
+
+        [TestMethod]
+        public async Task FilterPets_Returns_NotFound_When_No_Pets_Found()
+        {
+            // Arrange
+            var filterParams = new PetFilterParams
+            {
+                PetName = "NonExistentPet",
+                Species = "NonExistentSpecies",
+                PetIds = new int[] { 100, 200, 300 } // IDs that don't exist
+            };
+
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.FilterPetsAsync(filterParams)).ReturnsAsync(new List<Pet>());
+
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            var result = await controller.FilterPets(filterParams);
+
+            // Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public async Task GetPetsByIds_Returns_Ok_With_Pets()
+        {
+            // Arrange
+            int[] petIds = { 1, 2, 3 };
+            var mockRepo = new Mock<IPetsRepository>();
+            var expectedPets = new List<Pet>
+            {
+                new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
+                new Pet { PetID = 2, PetName = "Fluffy", Age = "5", Gender = "Female", PetParentID = 2, PetImage = new byte[0] },
+                new Pet { PetID = 3, PetName = "Max", Age = "2", Gender = "Male", PetParentID = 3, PetImage = new byte[0] }
+            };
+            mockRepo.Setup(repo => repo.GetPetsByIdsAsync(petIds)).ReturnsAsync(expectedPets);
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult actionResult = await controller.GetPetsByIds(petIds);
+            var contentResult = actionResult as OkNegotiatedContentResult<List<Pet>>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            CollectionAssert.AreEqual(expectedPets, contentResult.Content.ToList());
+
+            // Verify that GetPetsByIdsAsync is called with the correct parameter
+            mockRepo.Verify(repo => repo.GetPetsByIdsAsync(petIds), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task GetPetsByIds_Returns_BadRequest_When_No_Pet_Ids_Provided()
+        {
+            // Arrange
+            int[] petIds = null;
+            var mockRepo = new Mock<IPetsRepository>();
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult actionResult = await controller.GetPetsByIds(petIds);
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
+            BadRequestErrorMessageResult badRequestResult = actionResult as BadRequestErrorMessageResult;
+            Assert.AreEqual("Please provide at least one pet ID.", badRequestResult.Message);
+
+            // Verify that GetPetsByIdsAsync is not called
+            mockRepo.Verify(repo => repo.GetPetsByIdsAsync(It.IsAny<int[]>()), Times.Never);
+        }
+
+        [TestMethod]
+        public async Task GetPetsByIds_Returns_BadRequest_When_No_Pets_Found()
+        {
+            // Arrange
+            int[] petIds = { 1, 2, 3 };
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.GetPetsByIdsAsync(petIds)).ReturnsAsync(new List<Pet>());
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult actionResult = await controller.GetPetsByIds(petIds);
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
+            BadRequestErrorMessageResult badRequestResult = actionResult as BadRequestErrorMessageResult;
+            Assert.AreEqual("No pets found for the provided IDs.", badRequestResult.Message);
+
+            // Verify that GetPetsByIdsAsync is called with the correct parameter
+            mockRepo.Verify(repo => repo.GetPetsByIdsAsync(petIds), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task GetMorePets_Returns_Ok_With_Pets()
+        {
+            // Arrange
+            int pageNumber = 1;
+            int pageSize = 10;
+            var mockRepo = new Mock<IPetsRepository>();
+            var expectedPets = new List<Pet>
+            {
+                new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
+                new Pet { PetID = 2, PetName = "Fluffy", Age = "5", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
+            };
+            mockRepo.Setup(repo => repo.GetPetsAsync(pageNumber, pageSize)).ReturnsAsync(expectedPets);
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult actionResult = await controller.GetMorePets(pageNumber, pageSize);
+            var contentResult = actionResult as OkNegotiatedContentResult<List<Pet>>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            CollectionAssert.AreEqual(expectedPets, contentResult.Content);
+
+            // Verify that GetPetsAsync is called with the correct parameters
+            mockRepo.Verify(repo => repo.GetPetsAsync(pageNumber, pageSize), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task GetMorePets_Returns_InternalServerError_When_Exception_Occurs()
+        {
+            // Arrange
+            int pageNumber = 1;
+            int pageSize = 10;
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.GetPetsAsync(pageNumber, pageSize)).ThrowsAsync(new Exception("Test exception"));
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult actionResult = await controller.GetMorePets(pageNumber, pageSize);
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(ExceptionResult));
+
+            // Verify that GetPetsAsync is called with the correct parameters
+            mockRepo.Verify(repo => repo.GetPetsAsync(pageNumber, pageSize), Times.Once);
+        }
     }
 }

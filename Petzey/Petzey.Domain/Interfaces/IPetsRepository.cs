@@ -18,7 +18,7 @@ namespace Petzey.Domain.Interfaces
 
         Task<Pet> AddPet(Pet pet);
         Task<Pet> EditPet(Pet pet);
-        List<Pet> GetPetsByIDs(int[] ids);
+        Task<List<Pet>> GetPetsByIDs(int[] ids);
 
         Task<Pet> GetPetDetailsByPetIDAsync(int id);
         Task<List<Pet>> GetPetsAsync(int pageNumber, int pageSize);

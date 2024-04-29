@@ -63,14 +63,15 @@ namespace Petzey.WebAPI.Controllers
         [Route("filter")]
         public async Task<IHttpActionResult> FilterPets([FromBody] PetFilterParams filterParams)
         {
-            var pets = await _repo.FilterPetsAsync(filterParams);
-            if (pets.Any())
+            var filteredPets = await _repo.FilterPetsAsync(filterParams);
+
+            if (filteredPets.Any())
             {
-                return Ok(pets);
+                return Ok(filteredPets);
             }
             else
             {
-                return Ok("No pets found matching the search criteria.");
+                return NotFound(); // Return 404 Not Found when no pets are found
             }
         }
 
@@ -146,15 +147,25 @@ namespace Petzey.WebAPI.Controllers
         }
         [HttpPost]
         [Route("getPetsByIDs")]
-        public IHttpActionResult GetPetsByIDsInPetCardDto([FromBody] int[] ids)
+        public async Task<IHttpActionResult> GetPetsByIDsInPetCardDto([FromBody] int[] ids)
         {
-            var petsByIDs = _repo.GetPetsByIDs(ids);
-            var petCardDtos = ConvertPetsToCardPetDetailsDto(petsByIDs);
-            if(petCardDtos != null)
+            // If ids is null or empty, return BadRequest immediately
+            if (ids == null || ids.Length == 0)
             {
-                return Ok(petCardDtos);
+                return BadRequest("No IDs provided");
             }
-            return BadRequest("Pets not found for the given ids");
+
+            var petsByIDs = await _repo.GetPetsByIdsAsync(ids);
+
+            // If petsByIDs is null, it indicates no pets were found for the given IDs
+            if (petsByIDs == null)
+            {
+                return BadRequest("Pets not found for the given ids");
+            }
+
+            var petCardDtos = await ConvertPetsToCardPetDetailsDtoAsync(petsByIDs);
+
+            return Ok(petCardDtos);
         }
 
         [HttpPut]
@@ -215,14 +226,15 @@ namespace Petzey.WebAPI.Controllers
                 return Ok(obj);
         }
 
-        public List<CardPetDetailsDto> ConvertPetsToCardPetDetailsDto(List<Pet> pets)
+        public async Task<List<CardPetDetailsDto>> ConvertPetsToCardPetDetailsDtoAsync(List<Pet> pets)
         {
             if (pets == null)
             {
                 return null; // Return null if pets is null
             }
 
-            return pets.Select(pet => new CardPetDetailsDto
+            // No asynchronous operations here, but marked as async to indicate it can be used in async contexts
+            return await Task.FromResult(pets.Select(pet => new CardPetDetailsDto
             {
                 PetID = pet.PetID,
                 PetName = pet.PetName,
@@ -230,7 +242,7 @@ namespace Petzey.WebAPI.Controllers
                 PetGender = pet.Gender,
                 OwnerID = pet.PetParentID,
                 petImage = pet.PetImage
-            }).ToList();
+            }).ToList());
         }
 
     }
