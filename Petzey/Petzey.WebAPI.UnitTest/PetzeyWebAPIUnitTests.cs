@@ -698,5 +698,65 @@ namespace Petzey.WebAPI.UnitTest
             // Verify that GetPetsAsync is called with the correct parameters
             mockRepo.Verify(repo => repo.GetPetsAsync(pageNumber, pageSize), Times.Once);
         }
+
+        [TestMethod]
+        public async Task FilterPetsWithPagination_Returns_Ok_With_Filtered_Pets()
+        {
+            // Arrange
+            var filterParams = new PetFilterParams
+            {
+                PetName = "Fido",
+                Species = "Dog",
+                PetIds = new int[] { 1, 2 }
+            };
+            int pageNumber = 1;
+            int pageSize = 10;
+            var mockRepo = new Mock<IPetsRepository>();
+            var expectedPets = new List<Pet>
+            {
+                new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", Species = "Dog", PetParentID = 1, PetImage = new byte[0] },
+                new Pet { PetID = 2, PetName = "Fido", Age = "5", Gender = "Female", Species = "Dog", PetParentID = 2, PetImage = new byte[0] }
+            };
+            mockRepo.Setup(repo => repo.FilterPetsPerPageAsync(filterParams, pageNumber, pageSize)).ReturnsAsync(expectedPets);
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult actionResult = await controller.FilterPetsWithPagination(filterParams, pageNumber, pageSize);
+            var contentResult = actionResult as OkNegotiatedContentResult<List<Pet>>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.IsNotNull(contentResult.Content);
+            CollectionAssert.AreEqual(expectedPets, contentResult.Content);
+
+            // Verify that FilterPetsPerPageAsync is called with the correct parameters
+            mockRepo.Verify(repo => repo.FilterPetsPerPageAsync(filterParams, pageNumber, pageSize), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task FilterPetsWithPagination_Returns_NotFound_When_No_Pets_Found()
+        {
+            // Arrange
+            var filterParams = new PetFilterParams
+            {
+                PetName = "Unknown",
+                Species = "Unknown",
+                PetIds = new int[2]
+            };
+            int pageNumber = 1;
+            int pageSize = 10;
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.FilterPetsPerPageAsync(filterParams, pageNumber, pageSize)).ReturnsAsync(new List<Pet>());
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult actionResult = await controller.FilterPetsWithPagination(filterParams, pageNumber, pageSize);
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));
+
+            // Verify that FilterPetsPerPageAsync is called with the correct parameters
+            mockRepo.Verify(repo => repo.FilterPetsPerPageAsync(filterParams, pageNumber, pageSize), Times.Once);
+        }
     }
 }
