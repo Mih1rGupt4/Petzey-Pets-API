@@ -88,11 +88,21 @@ namespace Petzey.Data.Repository
 
         public async Task<Pet> EditPet(Pet pet)
         {
-            _db.Entry(pet).State = System.Data.Entity.EntityState.Modified;
-            await _db.SaveChangesAsync();
-            return pet;
+            // Check if a pet with the same ID exists in the database
+            var existingPet = await _db.Pets.FindAsync(pet.PetID);
+
+            if (existingPet != null)
+            {
+                // Update the existing pet with the new values
+                _db.Entry(existingPet).CurrentValues.SetValues(pet);
+                await _db.SaveChangesAsync();
+                return existingPet;
+            }
+
+            // Return null if the pet with the given ID doesn't exist
+            return null;
         }
-        
+
         public List<Pet> GetPetsByIDs(int[] ids)
         {
             List<Pet> petsByID = new List<Pet>();

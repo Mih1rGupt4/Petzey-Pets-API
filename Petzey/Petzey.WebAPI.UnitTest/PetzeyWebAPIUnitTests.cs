@@ -207,7 +207,7 @@ namespace Petzey.WebAPI.UnitTest
         }
 
         [TestMethod]
-        public void EditPet_WhenPetDataIsEdited_ReturnsOk()
+        public async Task EditPet_WhenPetDataIsEdited_ReturnsOk()
         {
             var mockRepo = new Mock<IPetsRepository>();
             Pet test_pet = new Pet
@@ -230,7 +230,7 @@ namespace Petzey.WebAPI.UnitTest
             var controller = new PetsController(mockRepo.Object);
 
             // Act
-            IHttpActionResult result = controller.EditPet(test_pet);
+            IHttpActionResult result = await controller.EditPet(test_pet);
             var content = result as OkNegotiatedContentResult<string>;
             // Assert
             Assert.IsNotNull(content);
@@ -239,7 +239,7 @@ namespace Petzey.WebAPI.UnitTest
         }
 
         [TestMethod]
-        public void EditPet_WhenPetDataEditFails_ReturnsBadRequest()
+        public async Task EditPet_WhenPetDataEditFails_ReturnsBadRequest()
         {
             var mockRepo = new Mock<IPetsRepository>();
             Pet test_pet = new Pet
@@ -262,8 +262,7 @@ namespace Petzey.WebAPI.UnitTest
             var controller = new PetsController(mockRepo.Object);
 
             // Act
-            IHttpActionResult result = controller.EditPet(test_pet);
-            var content = result as BadRequestErrorMessageResult;
+            IHttpActionResult result = await controller.EditPet(test_pet);
             // Assert
             //Assert.IsNotNull(content);
             //Assert.IsNotNull(content.Message);

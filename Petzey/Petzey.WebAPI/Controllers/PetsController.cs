@@ -158,15 +158,16 @@ namespace Petzey.WebAPI.Controllers
         }
 
         [HttpPut]
-        public IHttpActionResult EditPet([FromBody] Pet pet)
+        public async Task<IHttpActionResult> EditPet([FromBody] Pet pet)
         {
-            var editPet = _repo.EditPet(pet);
-            if(editPet != null)
+            var editedPet = await _repo.EditPet(pet);
+            if (editedPet != null)
             {
-                return Ok("edit successfull");
+                return Ok("Edit successful");
             }
-            return BadRequest("edit unsuccessfull");
+            return BadRequest("Edit unsuccessful");
         }
+
 
         [HttpGet]
         [Route("parentid/{parentId}")]
