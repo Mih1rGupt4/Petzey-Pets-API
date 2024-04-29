@@ -106,7 +106,7 @@ namespace Petzey.WebAPI.Controllers
             }
             else
             {
-                return Ok("No pets found for the provided IDs.");
+                return BadRequest("No pets found for the provided IDs.");
             }
         }
 

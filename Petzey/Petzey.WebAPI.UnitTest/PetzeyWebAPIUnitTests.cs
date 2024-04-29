@@ -285,7 +285,7 @@ namespace Petzey.WebAPI.UnitTest
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.IsInstanceOfType(result, typeof(OkNegotiatedContentResult<string>));
         }
 
         [TestMethod]
@@ -302,7 +302,7 @@ namespace Petzey.WebAPI.UnitTest
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(BadRequestResult));
+            Assert.IsInstanceOfType(result, typeof(BadRequestErrorMessageResult));
         }
 
 
