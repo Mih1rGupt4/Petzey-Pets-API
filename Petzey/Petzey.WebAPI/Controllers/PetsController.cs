@@ -10,11 +10,13 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Management;
 
 namespace Petzey.WebAPI.Controllers
 {
     [RoutePrefix("api/pets")]
+    [EnableCors("*","*","*")]
     public class PetsController : ApiController
     {
     
