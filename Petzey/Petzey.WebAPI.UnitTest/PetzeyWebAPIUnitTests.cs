@@ -706,8 +706,8 @@ namespace Petzey.WebAPI.UnitTest
             var mockRepo = new Mock<IPetsRepository>();
             var expectedPets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", Species = "Dog", PetParentID = 1, PetImage = new byte[0] },
-                new Pet { PetID = 2, PetName = "Fido", Age = "5", Gender = "Female", Species = "Dog", PetParentID = 2, PetImage = new byte[0] }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", Species = "Dog", PetParentID = 1, PetImage = new byte[0] },
+                new Pet { PetID = 2, PetName = "Fido", Gender = "Female", Species = "Dog", PetParentID = 2, PetImage = new byte[0] }
             };
             mockRepo.Setup(repo => repo.FilterPetsPerPageAsync(filterParams, pageNumber, pageSize)).ReturnsAsync(expectedPets);
             var controller = new PetsController(mockRepo.Object);
