@@ -1,4 +1,5 @@
 ﻿using Petzey.Domain.Entities;
+using Petzey.Domain.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace Petzey.Domain.Interfaces
         Task<List<Pet>> GetAllPetsAsync();
         Task<List<Pet>> searchPetsAsync(string searchTerm);
         Task<List<Pet>> FilterPetsAsync(PetFilterParams petFilterParams);
+        Task<List<Pet>> FilterPetsPerPageAsync(PetFilterParams petFilterParams, int pageNumber, int pageSize);
 
         Task<List<Pet>> FilterPetsAndIdAsync(PetFilterParams petFilterParams, int[] petIds);
         Task<List<Pet>> GetPetsByIdsAsync(int[] petIds);

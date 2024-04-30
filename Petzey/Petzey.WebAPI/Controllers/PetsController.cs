@@ -77,6 +77,22 @@ namespace Petzey.WebAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("filters", Name = "FilterPetsWithPagination")]
+        public async Task<IHttpActionResult> FilterPetsWithPagination([FromBody] PetFilterParams filterParams, [FromUri] int pageNumber, [FromUri] int? pageSize = 10)
+        {
+            var filteredPetsPerPage = await _repo.FilterPetsPerPageAsync(filterParams, pageNumber, (int)pageSize);
+
+            if (filteredPetsPerPage.Any())
+            {
+                return Ok(filteredPetsPerPage);
+            }
+            else
+            {
+                return NotFound(); // Return 404 Not Found when no pets are found
+            }
+        }
+
         //[HttpPost]
         //[Route("filterids")]
         //public async Task<IHttpActionResult> FilterPetsAndIds([FromBody] PetFilterParams filterParams,[FromUri]int[] petIds)
