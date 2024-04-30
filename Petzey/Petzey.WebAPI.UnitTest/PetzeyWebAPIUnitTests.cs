@@ -758,5 +758,55 @@ namespace Petzey.WebAPI.UnitTest
             // Verify that FilterPetsPerPageAsync is called with the correct parameters
             mockRepo.Verify(repo => repo.FilterPetsPerPageAsync(filterParams, pageNumber, pageSize), Times.Once);
         }
+
+        [TestMethod]
+        public async Task FilterPetsCount_Returns_Ok_With_Count()
+        {
+            // Arrange
+            var filterParams = new PetFilterParams
+            {
+                PetName = "Fido",
+                Species = "Dog",
+                PetIds = new[] { 1, 2, 3 }
+            };
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.FilterPetsCount(filterParams)).ReturnsAsync(5); // Return a count of 5
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult actionResult = await controller.FilterPetsCount(filterParams);
+            var contentResult = actionResult as OkNegotiatedContentResult<int>;
+
+            // Assert
+            Assert.IsNotNull(contentResult);
+            Assert.AreEqual(5, contentResult.Content);
+
+            // Verify that FilterPetsCount is called with the correct parameters
+            mockRepo.Verify(repo => repo.FilterPetsCount(filterParams), Times.Once);
+        }
+
+        [TestMethod]
+        public async Task FilterPetsCount_Returns_NotFound_When_No_Pets_Found()
+        {
+            // Arrange
+            var filterParams = new PetFilterParams
+            {
+                PetName = "Unknown",
+                Species = "Unknown",
+                PetIds = new int[0]
+            };
+            var mockRepo = new Mock<IPetsRepository>();
+            mockRepo.Setup(repo => repo.FilterPetsCount(filterParams)).ReturnsAsync(0); // Return a count of 0
+            var controller = new PetsController(mockRepo.Object);
+
+            // Act
+            IHttpActionResult actionResult = await controller.FilterPetsCount(filterParams);
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(NotFoundResult));
+
+            // Verify that FilterPetsCount is called with the correct parameters
+            mockRepo.Verify(repo => repo.FilterPetsCount(filterParams), Times.Once);
+        }
     }
 }
