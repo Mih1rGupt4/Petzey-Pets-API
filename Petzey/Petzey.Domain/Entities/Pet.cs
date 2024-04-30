@@ -19,7 +19,6 @@ namespace Petzey.Domain.Entities
         public string Breed { get; set; }
         public string Gender { get; set; }
         public DateTime DateOfBirth { get; set; }
-        public string Age { get; set; }
         public string BloodGroup { get; set; }
         public string Allergies { get; set; }
         public DateTime LastAppointmentDate { get; set; }

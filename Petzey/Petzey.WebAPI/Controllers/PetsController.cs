@@ -240,7 +240,6 @@ namespace Petzey.WebAPI.Controllers
             {
                 PetID = pet.PetID,
                 PetName = pet.PetName,
-                PetAge = pet.Age,
                 PetGender = pet.Gender,
                 OwnerID = pet.PetParentID,
                 petImage = pet.PetImage
