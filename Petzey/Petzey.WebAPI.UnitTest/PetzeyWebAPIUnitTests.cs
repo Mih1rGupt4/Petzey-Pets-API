@@ -54,7 +54,6 @@ namespace Petzey.WebAPI.UnitTest
             {
                 PetID = petId,
                 PetName = "Fido",
-                Age = "3",
                 Gender = "Male",
                 PetParentID = 1,
                 Allergies = "",
@@ -108,7 +107,7 @@ namespace Petzey.WebAPI.UnitTest
         public async Task GetAllPets_WithPets_ReturnOk()
         {
             var mockRepo = new Mock<IPetsRepository>();
-            mockRepo.Setup(repo => repo.GetAllPetsAsync()).ReturnsAsync(new List<Pet> { new Pet { PetID = 1, PetParentID = 2, Species = "Dog", Breed = "Pug", PetName = "name_test", Age = "2" } });
+            mockRepo.Setup(repo => repo.GetAllPetsAsync()).ReturnsAsync(new List<Pet> { new Pet { PetID = 1, PetParentID = 2, Species = "Dog", Breed = "Pug", PetName = "name_test"} });
 
             var controller = new PetsController(mockRepo.Object);
             var result = await controller.GetAllPets();
@@ -123,7 +122,6 @@ namespace Petzey.WebAPI.UnitTest
             Assert.AreEqual(2, contentResult.Content.First().PetParentID);
             Assert.AreEqual("Dog", contentResult.Content.First().Species);
             Assert.AreEqual("Pug", contentResult.Content.First().Breed);
-            Assert.AreEqual("2", contentResult.Content.First().Age);
 
         }
 
@@ -158,7 +156,6 @@ namespace Petzey.WebAPI.UnitTest
                 Breed = "Labrador Retriever",
                 Gender = "Male",
                 DateOfBirth = new DateTime(2019, 5, 15),
-                Age = "5 years",
                 BloodGroup = "A+",
                 Allergies = "None",
                 LastAppointmentDate = DateTime.Now.AddDays(-30)
@@ -189,7 +186,6 @@ namespace Petzey.WebAPI.UnitTest
                 Breed = "Labrador Retriever",
                 Gender = "Male",
                 DateOfBirth = new DateTime(2019, 5, 15),
-                Age = "5 years",
                 BloodGroup = "A+",
                 Allergies = "None",
                 LastAppointmentDate = DateTime.Now.AddDays(-30)
@@ -223,7 +219,6 @@ namespace Petzey.WebAPI.UnitTest
                 Breed = "Labrador Retriever",
                 Gender = "Male",
                 DateOfBirth = new DateTime(2019, 5, 15),
-                Age = "5 years",
                 BloodGroup = "A+",
                 Allergies = "None",
                 LastAppointmentDate = DateTime.Now.AddDays(-30)
@@ -255,7 +250,6 @@ namespace Petzey.WebAPI.UnitTest
                 Breed = "Labrador Retriever",
                 Gender = "Male",
                 DateOfBirth = new DateTime(2019, 5, 15),
-                Age = "5 years",
                 BloodGroup = "A+",
                 Allergies = "None",
                 LastAppointmentDate = DateTime.Now.AddDays(-30)
@@ -356,7 +350,6 @@ namespace Petzey.WebAPI.UnitTest
                 Breed = "Labrador Retriever",
                 Gender = "Male",
                 DateOfBirth = new DateTime(2019, 5, 15),
-                Age = "5 years",
                 BloodGroup = "A+",
                 Allergies = "None",
                 LastAppointmentDate = DateTime.Now.AddDays(-30)
@@ -404,8 +397,8 @@ namespace Petzey.WebAPI.UnitTest
             var controller = new PetsController(new PetsRepository()); // No need for a mock in this case
             var pets = new List<Pet>
     {
-        new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
-        new Pet { PetID = 2, PetName = "Fluffy", Age = "5", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
+        new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
+        new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
         // Add more sample pets if needed
     };
 
@@ -420,7 +413,6 @@ namespace Petzey.WebAPI.UnitTest
             {
                 Assert.AreEqual(pets[i].PetID, result[i].PetID);
                 Assert.AreEqual(pets[i].PetName, result[i].PetName);
-                Assert.AreEqual(pets[i].Age, result[i].PetAge);
                 Assert.AreEqual(pets[i].Gender, result[i].PetGender);
                 Assert.AreEqual(pets[i].PetParentID, result[i].OwnerID);
                 // Assert.AreEqual(pets[i].PetImage, result[i].petImage); // Asserting byte arrays might need a custom comparer
@@ -508,8 +500,8 @@ namespace Petzey.WebAPI.UnitTest
             // Arrange
             var pets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
-                new Pet { PetID = 2, PetName = "Fluffy", Age = "5", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
+                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
             };
 
             var mockRepo = new Mock<IPetsRepository>();
@@ -590,9 +582,9 @@ namespace Petzey.WebAPI.UnitTest
             var mockRepo = new Mock<IPetsRepository>();
             var expectedPets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
-                new Pet { PetID = 2, PetName = "Fluffy", Age = "5", Gender = "Female", PetParentID = 2, PetImage = new byte[0] },
-                new Pet { PetID = 3, PetName = "Max", Age = "2", Gender = "Male", PetParentID = 3, PetImage = new byte[0] }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
+                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = new byte[0] },
+                new Pet { PetID = 3, PetName = "Max", Gender = "Male", PetParentID = 3, PetImage = new byte[0] }
             };
             mockRepo.Setup(repo => repo.GetPetsByIdsAsync(petIds)).ReturnsAsync(expectedPets);
             var controller = new PetsController(mockRepo.Object);
@@ -660,8 +652,8 @@ namespace Petzey.WebAPI.UnitTest
             var mockRepo = new Mock<IPetsRepository>();
             var expectedPets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Age = "3", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
-                new Pet { PetID = 2, PetName = "Fluffy", Age = "5", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
+                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
             };
             mockRepo.Setup(repo => repo.GetPetsAsync(pageNumber, pageSize)).ReturnsAsync(expectedPets);
             var controller = new PetsController(mockRepo.Object);
