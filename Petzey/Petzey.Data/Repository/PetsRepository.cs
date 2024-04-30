@@ -200,5 +200,25 @@ namespace Petzey.Data.Repository
         {
             return await _db.Pets.Where(p => p.PetParentID == parentId).ToListAsync();
         }
+
+        public async Task<int> FilterPetsCount(PetFilterParams petFilterParams)
+        {
+            IQueryable<Pet> query = _db.Pets;
+
+            // Filter by pet name
+            if (!string.IsNullOrEmpty(petFilterParams.PetName))
+                query = query.Where(p => p.PetName.Contains(petFilterParams.PetName));
+
+            // Filter by species
+            if (!string.IsNullOrEmpty(petFilterParams.Species))
+                query = query.Where(p => p.Species.Contains(petFilterParams.Species));
+
+            // Filter by pet IDs
+            if (petFilterParams.PetIds != null && petFilterParams.PetIds.Any())
+                query = query.Where(p => petFilterParams.PetIds.Contains(p.PetID));
+
+            return await query.CountAsync(); // Use CountAsync to asynchronously count the number of results
+        }
+
     }
 }

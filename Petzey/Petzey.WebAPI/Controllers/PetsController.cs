@@ -93,6 +93,22 @@ namespace Petzey.WebAPI.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("filters/count")]
+        public async Task<IHttpActionResult> FilterPetsCount([FromBody] PetFilterParams filterParams)
+        {
+            var filteredPetsCount = await _repo.FilterPetsCount(filterParams);
+
+            if (filteredPetsCount > 0)
+            {
+                return Ok(filteredPetsCount);
+            }
+            else
+            {
+                return NotFound(); // Return 404 Not Found when no pets are found
+            }
+        }
+
         //[HttpPost]
         //[Route("filterids")]
         //public async Task<IHttpActionResult> FilterPetsAndIds([FromBody] PetFilterParams filterParams,[FromUri]int[] petIds)
