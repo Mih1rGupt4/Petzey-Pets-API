@@ -13,6 +13,6 @@ namespace Petzey.Domain.Dtos
         public string PetAge { get; set; }
         public string PetGender { get; set; }
         public int OwnerID { get; set; }
-        public byte[] petImage { get; set; }
+        public string petImage { get; set; }
     }
 }

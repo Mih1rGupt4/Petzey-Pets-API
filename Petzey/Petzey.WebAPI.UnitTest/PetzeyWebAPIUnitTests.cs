@@ -62,7 +62,7 @@ namespace Petzey.WebAPI.UnitTest
                 DateOfBirth = new DateTime(),
                 LastAppointmentDate = new DateTime(),
                 Species = "asfd",
-                PetImage = new byte[10]
+                PetImage = ""
             };
             mock.Setup(repo => repo.GetPetDetailsByPetIDAsync(petId)).ReturnsAsync(p);
 
@@ -151,7 +151,7 @@ namespace Petzey.WebAPI.UnitTest
                 PetID = 1,
                 PetParentID = 1001,
                 PetName = "Fluffy",
-                PetImage = new byte[0],
+                PetImage = "",
                 Species = "Dog",
                 Breed = "Labrador Retriever",
                 Gender = "Male",
@@ -181,7 +181,7 @@ namespace Petzey.WebAPI.UnitTest
                 PetID = 1,
                 PetParentID = 1001,
                 PetName = "Fluffy",
-                PetImage = new byte[0],
+                PetImage = "",
                 Species = "Dog",
                 Breed = "Labrador Retriever",
                 Gender = "Male",
@@ -214,7 +214,7 @@ namespace Petzey.WebAPI.UnitTest
                 PetID = 1,
                 PetParentID = 1001,
                 PetName = "Fluffy_edited",
-                PetImage = new byte[0],
+                PetImage = "",
                 Species = "Dog",
                 Breed = "Labrador Retriever",
                 Gender = "Male",
@@ -245,7 +245,7 @@ namespace Petzey.WebAPI.UnitTest
                 PetID = 1,
                 PetParentID = 1001,
                 PetName = "Fluffy_edited",
-                PetImage = new byte[0],
+                PetImage = "",
                 Species = "Dog",
                 Breed = "Labrador Retriever",
                 Gender = "Male",
@@ -345,7 +345,7 @@ namespace Petzey.WebAPI.UnitTest
                 PetID = 1,
                 PetParentID = parentId,
                 PetName = "Fluffy_edited",
-                PetImage = new byte[0],
+                PetImage ="",
                 Species = "Dog",
                 Breed = "Labrador Retriever",
                 Gender = "Male",
@@ -397,8 +397,8 @@ namespace Petzey.WebAPI.UnitTest
             var controller = new PetsController(new PetsRepository()); // No need for a mock in this case
             var pets = new List<Pet>
     {
-        new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
-        new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
+        new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage ="" },
+        new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = "" }
         // Add more sample pets if needed
     };
 
@@ -500,8 +500,8 @@ namespace Petzey.WebAPI.UnitTest
             // Arrange
             var pets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
-                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = "" },
+                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = "" }
             };
 
             var mockRepo = new Mock<IPetsRepository>();
@@ -582,9 +582,9 @@ namespace Petzey.WebAPI.UnitTest
             var mockRepo = new Mock<IPetsRepository>();
             var expectedPets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
-                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = new byte[0] },
-                new Pet { PetID = 3, PetName = "Max", Gender = "Male", PetParentID = 3, PetImage = new byte[0] }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = ""},
+                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = "" },
+                new Pet { PetID = 3, PetName = "Max", Gender = "Male", PetParentID = 3, PetImage = "" }
             };
             mockRepo.Setup(repo => repo.GetPetsByIdsAsync(petIds)).ReturnsAsync(expectedPets);
             var controller = new PetsController(mockRepo.Object);
@@ -652,8 +652,8 @@ namespace Petzey.WebAPI.UnitTest
             var mockRepo = new Mock<IPetsRepository>();
             var expectedPets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = new byte[0] },
-                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = new byte[0] }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = "" },
+                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = "" }
             };
             mockRepo.Setup(repo => repo.GetPetsAsync(pageNumber, pageSize)).ReturnsAsync(expectedPets);
             var controller = new PetsController(mockRepo.Object);
@@ -706,8 +706,8 @@ namespace Petzey.WebAPI.UnitTest
             var mockRepo = new Mock<IPetsRepository>();
             var expectedPets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", Species = "Dog", PetParentID = 1, PetImage = new byte[0] },
-                new Pet { PetID = 2, PetName = "Fido", Gender = "Female", Species = "Dog", PetParentID = 2, PetImage = new byte[0] }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", Species = "Dog", PetParentID = 1, PetImage = "" },
+                new Pet { PetID = 2, PetName = "Fido", Gender = "Female", Species = "Dog", PetParentID = 2, PetImage = "" }
             };
             mockRepo.Setup(repo => repo.FilterPetsPerPageAsync(filterParams, pageNumber, pageSize)).ReturnsAsync(expectedPets);
             var controller = new PetsController(mockRepo.Object);
