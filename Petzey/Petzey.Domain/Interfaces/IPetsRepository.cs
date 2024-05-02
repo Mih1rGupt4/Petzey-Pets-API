@@ -24,7 +24,7 @@ namespace Petzey.Domain.Interfaces
 
         Task<Pet> GetPetDetailsByPetIDAsync(int id);
         Task<List<Pet>> GetPetsAsync(int pageNumber, int pageSize);
-        Task<List<Pet>> GetPetsByPetParentIdAsync(int parentId);
+        Task<List<Pet>> GetPetsByPetParentIdAsync(string parentId);
         Task<bool> DeletePetAsync(int petId);
         Task<bool> AddLastAppointmentDate(DateTime date, int id);
 

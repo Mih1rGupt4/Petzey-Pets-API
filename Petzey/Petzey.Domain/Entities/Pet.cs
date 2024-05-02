@@ -11,7 +11,7 @@ namespace Petzey.Domain.Entities
     public class Pet
     {
         public int PetID { get; set; }
-        public int PetParentID { get; set; }
+        public string PetParentID { get; set; }
         public string PetName { get; set; }
 
         public string PetImage { get; set; }

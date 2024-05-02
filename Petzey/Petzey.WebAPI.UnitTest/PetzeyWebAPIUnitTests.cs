@@ -55,7 +55,7 @@ namespace Petzey.WebAPI.UnitTest
                 PetID = petId,
                 PetName = "Fido",
                 Gender = "Male",
-                PetParentID = 1,
+                PetParentID = "1",
                 Allergies = "",
                 BloodGroup = "1",
                 Breed = "asdf",
@@ -107,7 +107,7 @@ namespace Petzey.WebAPI.UnitTest
         public async Task GetAllPets_WithPets_ReturnOk()
         {
             var mockRepo = new Mock<IPetsRepository>();
-            mockRepo.Setup(repo => repo.GetAllPetsAsync()).ReturnsAsync(new List<Pet> { new Pet { PetID = 1, PetParentID = 2, Species = "Dog", Breed = "Pug", PetName = "name_test"} });
+            mockRepo.Setup(repo => repo.GetAllPetsAsync()).ReturnsAsync(new List<Pet> { new Pet { PetID = 1, PetParentID = "2", Species = "Dog", Breed = "Pug", PetName = "name_test"} });
 
             var controller = new PetsController(mockRepo.Object);
             var result = await controller.GetAllPets();
@@ -119,7 +119,7 @@ namespace Petzey.WebAPI.UnitTest
             Assert.AreEqual(1, contentResult.Content.Count);
             Assert.AreEqual("name_test", contentResult.Content.First().PetName);
             Assert.AreEqual(1, contentResult.Content.First().PetID);
-            Assert.AreEqual(2, contentResult.Content.First().PetParentID);
+            Assert.AreEqual("2", contentResult.Content.First().PetParentID);
             Assert.AreEqual("Dog", contentResult.Content.First().Species);
             Assert.AreEqual("Pug", contentResult.Content.First().Breed);
 
@@ -149,7 +149,7 @@ namespace Petzey.WebAPI.UnitTest
             Pet test_pet = new Pet
             {
                 PetID = 1,
-                PetParentID = 1001,
+                PetParentID = "1001",
                 PetName = "Fluffy",
                 PetImage = "",
                 Species = "Dog",
@@ -179,7 +179,7 @@ namespace Petzey.WebAPI.UnitTest
             Pet test_pet = new Pet
             {
                 PetID = 1,
-                PetParentID = 1001,
+                PetParentID = "1001",
                 PetName = "Fluffy",
                 PetImage = "",
                 Species = "Dog",
@@ -212,7 +212,7 @@ namespace Petzey.WebAPI.UnitTest
             Pet test_pet = new Pet
             {
                 PetID = 1,
-                PetParentID = 1001,
+                PetParentID = "1001",
                 PetName = "Fluffy_edited",
                 PetImage = "",
                 Species = "Dog",
@@ -243,7 +243,7 @@ namespace Petzey.WebAPI.UnitTest
             Pet test_pet = new Pet
             {
                 PetID = 1,
-                PetParentID = 1001,
+                PetParentID = "1001",
                 PetName = "Fluffy_edited",
                 PetImage = "",
                 Species = "Dog",
@@ -338,7 +338,7 @@ namespace Petzey.WebAPI.UnitTest
         public async Task GetPetsByParentID_WhenPetsAreFound_ReturnsOk()
         {
             // Arrange
-            int parentId = 1;
+            string parentId = "1";
             var mockRepo = new Mock<IPetsRepository>();
             Pet test_pet = new Pet
             {
@@ -376,7 +376,7 @@ namespace Petzey.WebAPI.UnitTest
         public async Task GetPetsByParentID_WhenPetsAreNotFound_ReturnsNotFound()
         {
             // Arrange
-            int parentId = 1;
+            string parentId = "1";
             var mockRepo = new Mock<IPetsRepository>();
             mockRepo.Setup(repo => repo.GetPetsByPetParentIdAsync(parentId)).ReturnsAsync(new List<Pet>());
 
@@ -397,8 +397,8 @@ namespace Petzey.WebAPI.UnitTest
             var controller = new PetsController(new PetsRepository()); // No need for a mock in this case
             var pets = new List<Pet>
     {
-        new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage ="" },
-        new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = "" }
+        new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = "1", PetImage ="" },
+        new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = "2", PetImage = "" }
         // Add more sample pets if needed
     };
 
@@ -500,8 +500,8 @@ namespace Petzey.WebAPI.UnitTest
             // Arrange
             var pets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = "" },
-                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = "" }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = "1", PetImage = "" },
+                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = "2", PetImage = "" }
             };
 
             var mockRepo = new Mock<IPetsRepository>();
@@ -582,9 +582,9 @@ namespace Petzey.WebAPI.UnitTest
             var mockRepo = new Mock<IPetsRepository>();
             var expectedPets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = ""},
-                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = "" },
-                new Pet { PetID = 3, PetName = "Max", Gender = "Male", PetParentID = 3, PetImage = "" }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = "1", PetImage = ""},
+                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = "2", PetImage = "" },
+                new Pet { PetID = 3, PetName = "Max", Gender = "Male", PetParentID = "3", PetImage = "" }
             };
             mockRepo.Setup(repo => repo.GetPetsByIdsAsync(petIds)).ReturnsAsync(expectedPets);
             var controller = new PetsController(mockRepo.Object);
@@ -652,8 +652,8 @@ namespace Petzey.WebAPI.UnitTest
             var mockRepo = new Mock<IPetsRepository>();
             var expectedPets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = 1, PetImage = "" },
-                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = 2, PetImage = "" }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", PetParentID = "1", PetImage = "" },
+                new Pet { PetID = 2, PetName = "Fluffy", Gender = "Female", PetParentID = "2", PetImage = "" }
             };
             mockRepo.Setup(repo => repo.GetPetsAsync(pageNumber, pageSize)).ReturnsAsync(expectedPets);
             var controller = new PetsController(mockRepo.Object);
@@ -706,8 +706,8 @@ namespace Petzey.WebAPI.UnitTest
             var mockRepo = new Mock<IPetsRepository>();
             var expectedPets = new List<Pet>
             {
-                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", Species = "Dog", PetParentID = 1, PetImage = "" },
-                new Pet { PetID = 2, PetName = "Fido", Gender = "Female", Species = "Dog", PetParentID = 2, PetImage = "" }
+                new Pet { PetID = 1, PetName = "Fido", Gender = "Male", Species = "Dog", PetParentID = "1", PetImage = "" },
+                new Pet { PetID = 2, PetName = "Fido", Gender = "Female", Species = "Dog", PetParentID = "2", PetImage = "" }
             };
             mockRepo.Setup(repo => repo.FilterPetsPerPageAsync(filterParams, pageNumber, pageSize)).ReturnsAsync(expectedPets);
             var controller = new PetsController(mockRepo.Object);

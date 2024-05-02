@@ -196,7 +196,7 @@ namespace Petzey.Data.Repository
             await _db.SaveChangesAsync();
             return true;
         }
-        public async Task<List<Pet>> GetPetsByPetParentIdAsync(int parentId)
+        public async Task<List<Pet>> GetPetsByPetParentIdAsync(string parentId)
         {
             return await _db.Pets.Where(p => p.PetParentID == parentId).ToListAsync();
         }

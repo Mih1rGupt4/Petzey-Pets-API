@@ -216,7 +216,7 @@ namespace Petzey.WebAPI.Controllers
 
         [HttpGet]
         [Route("parentid/{parentId}")]
-        public async Task<IHttpActionResult> GetPetsByPetParentId(int parentId)
+        public async Task<IHttpActionResult> GetPetsByPetParentId(string parentId)
         {
             var pets = await _repo.GetPetsByPetParentIdAsync(parentId);
             if (pets.Any())
