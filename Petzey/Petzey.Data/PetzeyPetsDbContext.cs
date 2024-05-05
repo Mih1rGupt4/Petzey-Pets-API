@@ -16,10 +16,6 @@ namespace Petzey.Data
     {
         public PetzeyPetsDbContext() : base("DefaultConnection")
         {
-            // Use SqlAzureExecutionStrategy for transient failures
-            Database.SetInitializer<PetzeyPetsDbContext>(null);
-            this.Database.Initialize(false);
-            this.Database.CommandTimeout = 180;
         }
         
         public DbSet<Pet> Pets { get; set; }

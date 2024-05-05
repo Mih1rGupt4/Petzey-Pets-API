@@ -32,6 +32,7 @@ namespace Petzey.WebAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Owner")]
         public async Task<IHttpActionResult> GetAllPets()
         {
             List<Pet> pets = await _repo.GetAllPetsAsync(); // Call the async method
