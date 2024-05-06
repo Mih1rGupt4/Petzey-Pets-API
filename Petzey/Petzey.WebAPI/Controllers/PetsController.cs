@@ -32,7 +32,6 @@ namespace Petzey.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Owner")]
         public async Task<IHttpActionResult> GetAllPets()
         {
             List<Pet> pets = await _repo.GetAllPetsAsync(); // Call the async method
@@ -46,21 +45,6 @@ namespace Petzey.WebAPI.Controllers
                 return BadRequest();
             }
         }
-
-        //[HttpGet]
-        //[Route("searchPets")]
-        //public async Task<IHttpActionResult> SearchPets(string searchTerm)
-        //{
-        //    var searchResults = await _repo.searchPetsAsync(searchTerm);
-        //    if (searchResults.Any())
-        //    {
-        //        return Ok(searchResults);
-        //    }
-        //    else
-        //    {
-        //        return Ok("No pets found matching the search criteria.");
-        //    }
-        //}
 
         [HttpPost]
         [Route("filter")]
