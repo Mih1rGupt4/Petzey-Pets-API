@@ -21,10 +21,6 @@ namespace Petzey.WebAPI.Controllers
     {
     
         IPetsRepository _repo;
-        //public PetsController() : this(new PetsRepository())
-        //{
-
-        //}
 
         public PetsController(IPetsRepository repo)
         {
@@ -52,9 +48,10 @@ namespace Petzey.WebAPI.Controllers
         {
             var filteredPets = await _repo.FilterPetsAsync(filterParams); // call the async method
 
+            // if found any pets, then return 
             if (filteredPets.Any())
             {
-                return Ok(filteredPets);
+                return Ok(filteredPets);  // Return the Pets after Filtering based on filterParams
             }
             else
             {
@@ -68,9 +65,10 @@ namespace Petzey.WebAPI.Controllers
         {
             var filteredPetsPerPage = await _repo.FilterPetsPerPageAsync(filterParams, pageNumber, (int)pageSize); // call the async method
 
+            // if found any pets, then return 
             if (filteredPetsPerPage.Any())
             {
-                return Ok(filteredPetsPerPage);
+                return Ok(filteredPetsPerPage);  // Return the Pets after Filtering based on filterParams and Pagination
             }
             else
             {
@@ -87,6 +85,7 @@ namespace Petzey.WebAPI.Controllers
             if (filteredPetsCount > 0) // check if there are any pets meeting the criteria
             {
                 return Ok(filteredPetsCount); // if greater than zero return the number with an OK request
+                return Ok(filteredPetsCount); // Returning number of pets based on filter
             }
             else
             {
@@ -95,16 +94,18 @@ namespace Petzey.WebAPI.Controllers
         }
 
        
+
         [HttpPost]
         [Route("Ids")]
         public async Task<IHttpActionResult> GetPetsByIds([FromBody]int[] petIds)// get the pets based on the IDs provided
         {
+            // If ids is null or empty, return BadRequest immediately
             if (petIds == null || !petIds.Any())
             {
                 return BadRequest("Please provide at least one pet ID.");// check if the given array of IDs is empty or not, if empty return a bad request
             }
 
-            var pets = await _repo.GetPetsByIdsAsync(petIds);
+            var pets = await _repo.GetPetsByIdsAsync(petIds);  // Get all pets based on array of petIds 
 
             if (pets.Any())
             {
