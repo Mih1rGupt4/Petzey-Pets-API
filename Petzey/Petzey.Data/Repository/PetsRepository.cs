@@ -67,18 +67,6 @@ namespace Petzey.Data.Repository
             return filteredPets.ToList();
         }
 
-        //public async Task<List<Pet>> FilterPetsPerPageAsync(PetFilterParams petFilterParams, int pageNumber, int pageSize)
-        //{
-        //    var filteredPets = await _db.Pets.Where(p => (p.PetName.Contains(petFilterParams.PetName) || petFilterParams.PetName == null)
-        //    && (p.Species.Contains(petFilterParams.Species) || petFilterParams.Species == null)
-        //    && (petFilterParams.PetIds.Contains(p.PetID) || !petFilterParams.PetIds.Any())).ToListAsync();
-
-        //    return filteredPets.OrderBy(p => p.PetID)
-        //        .Skip((pageNumber - 1) * pageSize)
-        //        .Take(pageSize)
-        //        .ToList();
-        //}
-
         public async Task<List<Pet>> FilterPetsPerPageAsync(PetFilterParams petFilterParams, int pageNumber, int pageSize)
         {
             IQueryable<Pet> query = _db.Pets;

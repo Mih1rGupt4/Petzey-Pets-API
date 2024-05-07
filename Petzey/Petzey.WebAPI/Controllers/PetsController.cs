@@ -85,7 +85,6 @@ namespace Petzey.WebAPI.Controllers
             if (filteredPetsCount > 0) // check if there are any pets meeting the criteria
             {
                 return Ok(filteredPetsCount); // if greater than zero return the number with an OK request
-                return Ok(filteredPetsCount); // Returning number of pets based on filter
             }
             else
             {
@@ -130,12 +129,12 @@ namespace Petzey.WebAPI.Controllers
         {
             try
             {
-                List<Pet> pets = await _repo.GetPetsAsync(pageNumber, pageSize);
-                return Ok(pets);
+                List<Pet> pets = await _repo.GetPetsAsync(pageNumber, pageSize);//getting pets based on the pet size
+                return Ok(pets);// returning the pets 
             }
             catch (Exception ex)
             {
-                // Log the exception
+                // Log the exception if any exception is caught 
                 return InternalServerError(ex);
             }
         }
