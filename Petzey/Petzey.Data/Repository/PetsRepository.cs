@@ -180,12 +180,17 @@ namespace Petzey.Data.Repository
         }
         public async Task<bool> DeletePetAsync(int petId)
         {
+            // Find the pet with the particular PetID
             Pet pet = await _db.Pets.FindAsync(petId);
+            // If pet is not found then return false
             if (pet == null)
                 return false;
 
+            // If pet is found then delete the pet and save the changes in the database
             _db.Pets.Remove(pet);
             await _db.SaveChangesAsync();
+
+            // Return true indicating that the pet has successfully deleted
             return true;
         }
         
@@ -198,6 +203,7 @@ namespace Petzey.Data.Repository
         }
         public async Task<List<Pet>> GetPetsByPetParentIdAsync(string parentId)
         {
+            // Search for the pets with partcular ParentID and return them
             return await _db.Pets.Where(p => p.PetParentID == parentId).ToListAsync();
         }
 

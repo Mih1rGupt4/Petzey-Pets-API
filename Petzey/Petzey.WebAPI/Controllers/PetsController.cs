@@ -206,11 +206,13 @@ namespace Petzey.WebAPI.Controllers
             var pets = await _repo.GetPetsByPetParentIdAsync(parentId);
             if (pets.Any())
             {
-                return Ok(pets);
+                // If pets any pets are found it will return the pets along with the status code of 200
+                return Ok(pets);   
             }
             else
             {
-                return NotFound();
+                // If there are no pets with that particular ParentID then it will return 404
+                return NotFound();   
             }
         }
 
@@ -222,6 +224,7 @@ namespace Petzey.WebAPI.Controllers
 
             if (!success)
                 return NotFound();
+            // if the pet is not found then it will return a status code of 404
 
             return Ok($"Pet with ID {id} successfully deleted");
         }
