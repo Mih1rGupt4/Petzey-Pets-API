@@ -32,23 +32,23 @@ namespace Petzey.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IHttpActionResult> GetAllPets()
+        public async Task<IHttpActionResult> GetAllPets() //Method to Get all pets
         {
             List<Pet> pets = await _repo.GetAllPetsAsync(); // Call the async method
 
-            if (pets.Any())
+            if (pets.Any())//checking is the returned list is empty or not
             {
-                return Ok(pets);
+                return Ok(pets);//return OK with list if not empty
             }
             else
             {
-                return BadRequest();
+                return BadRequest();//return BadRequest if empty
             }
         }
 
         [HttpPost]
         [Route("filter")]
-        public async Task<IHttpActionResult> FilterPets([FromBody] PetFilterParams filterParams)
+        public async Task<IHttpActionResult> FilterPets([FromBody] PetFilterParams filterParams) //Method to get 
         {
             var filteredPets = await _repo.FilterPetsAsync(filterParams);
 
