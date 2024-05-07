@@ -21,24 +21,22 @@ namespace Petzey.WebAPI.Controllers
     {
     
         IPetsRepository _repo;
-        //public PetsController() : this(new PetsRepository())
-        //{
-
-        //}
 
         public PetsController(IPetsRepository repo)
         {
             _repo = repo ?? throw new ArgumentNullException(nameof(repo));
         }
 
-        [HttpGet]
+
+        // To Get All Pets
+        [HttpGet]  
         public async Task<IHttpActionResult> GetAllPets()
         {
             List<Pet> pets = await _repo.GetAllPetsAsync(); // Call the async method
 
             if (pets.Any())
             {
-                return Ok(pets);
+                return Ok(pets);    // Return Pets if found Any
             }
             else
             {
@@ -52,9 +50,10 @@ namespace Petzey.WebAPI.Controllers
         {
             var filteredPets = await _repo.FilterPetsAsync(filterParams);
 
+            // if found any pets, then return 
             if (filteredPets.Any())
             {
-                return Ok(filteredPets);
+                return Ok(filteredPets);  // Return the Pets after Filtering based on filterParams
             }
             else
             {
@@ -68,9 +67,10 @@ namespace Petzey.WebAPI.Controllers
         {
             var filteredPetsPerPage = await _repo.FilterPetsPerPageAsync(filterParams, pageNumber, (int)pageSize);
 
+            // if found any pets, then return 
             if (filteredPetsPerPage.Any())
             {
-                return Ok(filteredPetsPerPage);
+                return Ok(filteredPetsPerPage);  // Return the Pets after Filtering based on filterParams and Pagination
             }
             else
             {
@@ -86,7 +86,7 @@ namespace Petzey.WebAPI.Controllers
 
             if (filteredPetsCount > 0)
             {
-                return Ok(filteredPetsCount);
+                return Ok(filteredPetsCount); // Returning number of pets based on filter
             }
             else
             {
@@ -94,35 +94,22 @@ namespace Petzey.WebAPI.Controllers
             }
         }
 
-        //[HttpPost]
-        //[Route("filterids")]
-        //public async Task<IHttpActionResult> FilterPetsAndIds([FromBody] PetFilterParams filterParams,[FromUri]int[] petIds)
-        //{
-        //    var pets = await _repo.FilterPetsAndIdAsync(filterParams,petIds);
-        //    if (pets.Any())
-        //    {
-        //        return Ok(pets);
-        //    }
-        //    else
-        //    {
-        //        return Ok("No pets found matching the search criteria.");
-        //    }
-        //}
 
         [HttpPost]
         [Route("Ids")]
         public async Task<IHttpActionResult> GetPetsByIds([FromBody]int[] petIds)
         {
+            // If ids is null or empty, return BadRequest immediately
             if (petIds == null || !petIds.Any())
             {
                 return BadRequest("Please provide at least one pet ID.");
             }
 
-            var pets = await _repo.GetPetsByIdsAsync(petIds);
+            var pets = await _repo.GetPetsByIdsAsync(petIds);  // Get all pets based on array of petIds 
 
             if (pets.Any())
             {
-                return Ok(pets);
+                return Ok(pets); // return the list of pets if found any 
             }
             else
             {
@@ -134,7 +121,7 @@ namespace Petzey.WebAPI.Controllers
         [Route("details/{id}")]
         public async Task<IHttpActionResult> GetPetDetailsByPetID(int id)
         {
-            Pet pet = await _repo.GetPetDetailsByPetIDAsync(id);
+            Pet pet = await _repo.GetPetDetailsByPetIDAsync(id);  // returns Pet object for the particular PetID 
             return OkOrNotFound(pet);
         }
 

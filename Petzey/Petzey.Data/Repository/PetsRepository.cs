@@ -59,7 +59,7 @@ namespace Petzey.Data.Repository
         public async Task<List<Pet>> FilterPetsAsync(PetFilterParams petFilterParams)
         {
 
-          // var pets =  db.Pets.Where(pet => petFilterParams.PetIds.Contains(pet.PetID));
+         
 
             var filteredPets =await _db.Pets.Where(p => (p.PetName.Contains(petFilterParams.PetName) || petFilterParams.PetName == null)
             && (p.Species.Contains(petFilterParams.Species) || petFilterParams.Species == null)
@@ -130,7 +130,7 @@ namespace Petzey.Data.Repository
 
         public async Task<Pet> AddPet(Pet pet)
         {
-            _db.Pets.Add(pet);
+            _db.Pets.Add(pet); 
             await _db.SaveChangesAsync();
             return pet;
         }
@@ -154,13 +154,13 @@ namespace Petzey.Data.Repository
 
         public async Task<List<Pet>> GetPetsByIDs(int[] ids)
         {
-            List<Pet> petsByID = new List<Pet>();
-            foreach (int id in ids)
+            List<Pet> petsByID = new List<Pet>(); 
+            foreach (int id in ids)   // loop through all the input Pet Ids
             {
                 Pet pet = await _db.Pets.FirstOrDefaultAsync(p => p.PetID == id);
                 if (pet != null)
                 {
-                    petsByID.Add(pet);
+                    petsByID.Add(pet); // Add to the list of pets to be returned
                 }
             }
             return petsByID;
