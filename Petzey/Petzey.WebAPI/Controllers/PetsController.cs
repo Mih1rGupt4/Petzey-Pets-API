@@ -174,20 +174,21 @@ namespace Petzey.WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IHttpActionResult> EditPet([FromBody] Pet pet)
+        public async Task<IHttpActionResult> EditPet([FromBody] Pet pet)// to edit the details of a particular pet
         {
-            var editedPet = await _repo.EditPet(pet);
+            var editedPet = await _repo.EditPet(pet);// call the function to edit pet
+            //checks if the returned value is null to verify if edit is successful or not
             if (editedPet != null)
             {
-                return Ok("Edit successful");
+                return Ok("Edit successful");// OK if successful
             }
-            return BadRequest("Edit unsuccessful");
+            return BadRequest("Edit unsuccessful");//BadRequest if unsuccessful
         }
 
 
         [HttpGet]
         [Route("parentid/{parentId}")]
-        public async Task<IHttpActionResult> GetPetsByPetParentId(string parentId)
+        public async Task<IHttpActionResult> GetPetsByPetParentId(string parentId)//to get Pet by PetParent ID
         {
             var pets = await _repo.GetPetsByPetParentIdAsync(parentId);
             if (pets.Any())
@@ -204,29 +205,29 @@ namespace Petzey.WebAPI.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IHttpActionResult> DeletePet(int id)
+        public async Task<IHttpActionResult> DeletePet(int id)// to delete a pet
         {
-            bool success = await _repo.DeletePetAsync(id);
+            bool success = await _repo.DeletePetAsync(id);// calls the function to delete a pet and returns a bool
 
-            if (!success)
+            if (!success)//if returned value is false then delete failed
                 return NotFound();
             // if the pet is not found then it will return a status code of 404
 
-            return Ok($"Pet with ID {id} successfully deleted");
+            return Ok($"Pet with ID {id} successfully deleted");//if returned value is true then edit successful
         }
         [HttpPut]
         [Route("AddLastAppointmentDate/{id}")]
-        public async Task<IHttpActionResult> addLastAppointmentDate(int id, [FromBody] DateTime date)
+        public async Task<IHttpActionResult> addLastAppointmentDate(int id, [FromBody] DateTime date)//to update the last appointment date of the pet
         {
-            bool status = await  _repo.AddLastAppointmentDate(date, id);
+            bool status = await  _repo.AddLastAppointmentDate(date, id);//call the function to update and wait for the status
             if (status)
             {
-                return Ok("Added appointment date to pet");
+                return Ok("Added appointment date to pet");//Ok if date is updated
             }
-            return BadRequest("Failed in adding appointment date to pet");
+            return BadRequest("Failed in adding appointment date to pet");// Bad Request if not updated / error in input data
         }
 
-        public IHttpActionResult OkOrNotFound(object obj)
+        public IHttpActionResult OkOrNotFound(object obj)// function to verify if the object is found or not found
         {
             if(obj == null)
                 return NotFound();
@@ -234,7 +235,7 @@ namespace Petzey.WebAPI.Controllers
                 return Ok(obj);
         }
 
-        public async Task<List<CardPetDetailsDto>> ConvertPetsToCardPetDetailsDtoAsync(List<Pet> pets)
+        public async Task<List<CardPetDetailsDto>> ConvertPetsToCardPetDetailsDtoAsync(List<Pet> pets)// function to convert the pet entity to pet dto
         {
             if (pets == null)
             {
