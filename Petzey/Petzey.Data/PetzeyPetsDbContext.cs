@@ -5,7 +5,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Petzey.Domain.Entities;
 using Petzey.Domain.Interfaces;
 using System.Data.Entity.Infrastructure.Interception;
 using System.Data.Entity.SqlServer;
@@ -19,5 +18,7 @@ namespace Petzey.Data
         }
         
         public DbSet<Pet> Pets { get; set; }
+        public DbSet<Allergy> Allergies { get; set; }
+        public DbSet<PetAllergies> PetAllergies { get; set; }
     }
 }

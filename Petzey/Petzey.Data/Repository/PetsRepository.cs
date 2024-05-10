@@ -185,7 +185,7 @@ namespace Petzey.Data.Repository
         public async Task<bool> AddLastAppointmentDate(DateTime date, int id)
         {
             var pet = _db.Pets.Find(id);
-            pet.LastAppointmentDate = date;
+            //pet.LastAppointmentDate = date;
             await _db.SaveChangesAsync();
             return true;
         }

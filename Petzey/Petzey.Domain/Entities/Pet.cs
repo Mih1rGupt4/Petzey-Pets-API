@@ -21,7 +21,8 @@ namespace Petzey.Domain.Entities
         public bool Neutered {  get; set; }
         public DateTime DateOfBirth { get; set; }
         public string BloodGroup { get; set; }
-        public string Allergies { get; set; }
-        public DateTime? LastAppointmentDate { get; set; }
+        //public string Allergies { get; set; }
+        //public DateTime? LastAppointmentDate { get; set; }
+        public bool isDeleted { get; set; }
     }
 }
