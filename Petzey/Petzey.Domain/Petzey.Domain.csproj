@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="Dtos\CardPetDetailsDto.cs" />
+    <Compile Include="Dtos\FilteredPetsDto.cs" />
     <Compile Include="Dtos\PetDetailsDto.cs" />
     <Compile Include="Dtos\PetGridDetailsDto.cs" />
     <Compile Include="Dtos\TokenDTO.cs" />
