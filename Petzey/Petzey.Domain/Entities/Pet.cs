@@ -23,6 +23,6 @@ namespace Petzey.Domain.Entities
         public string BloodGroup { get; set; }
         //public string Allergies { get; set; }
         //public DateTime? LastAppointmentDate { get; set; }
-        public bool isDeleted { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
