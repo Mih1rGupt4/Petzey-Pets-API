@@ -43,12 +43,12 @@ namespace Petzey.WebAPI.Controllers
         }
         
         [HttpPost]
-        [Route("filter")]
-        public async Task<IHttpActionResult> FilterPets([FromBody] PetFilterParams filterParams) //Method to get pets with a search criteria
+        [Route("filter/petIds")]
+        public async Task<IHttpActionResult> FilterPetIds([FromBody] PetFilterParams filterParams) //Method to get pets with a search criteria
         {
             var filteredPets = await _repo.FilterPetsAsync(filterParams); // call the async method
 
-            // if found any pets, then return 
+            // if found any petIds, then return 
             if (filteredPets.Any())
             {
                 return Ok(filteredPets);  // Return the Pets after Filtering based on filterParams
@@ -60,7 +60,7 @@ namespace Petzey.WebAPI.Controllers
         }
 
         [HttpPost]
-        [Route("filter/1")]
+        [Route("filter/paged")]
         public async Task<IHttpActionResult> Filter([FromBody] PetFilterParams filterParams, [FromUri] int pageNumber, [FromUri] int pageSize)
         {
             FilteredPetsDto filteredPets = await _repo.FilterPetsAsync(filterParams, pageNumber, pageSize); // call the async method

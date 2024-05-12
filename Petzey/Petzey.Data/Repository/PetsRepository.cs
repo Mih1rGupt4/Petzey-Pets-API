@@ -56,13 +56,13 @@ namespace Petzey.Data.Repository
             }
         }
 
-        public async Task<List<Pet>> FilterPetsAsync(PetFilterParams petFilterParams)
+        public async Task<List<int>> FilterPetsAsync(PetFilterParams petFilterParams)
         {
 
-            var filteredPets =await _db.Pets.Where(p => (p.PetName.Contains(petFilterParams.PetName) || petFilterParams.PetName == null)
-            && (p.Species.Contains(petFilterParams.Species) || petFilterParams.Species == null)
-            && (petFilterParams.PetIds.Contains(p.PetID) || !petFilterParams.PetIds.Any())).ToListAsync();
-            return filteredPets.ToList();
+            var filteredPets = await _db.Pets.Where(p => (p.PetName.Contains(petFilterParams.PetName) || petFilterParams.PetName == null)
+                 && (p.Species.Contains(petFilterParams.Species) || petFilterParams.Species == null)
+                 && (petFilterParams.PetIds.Contains(p.PetID) || !petFilterParams.PetIds.Any())).ToListAsync();
+            return filteredPets.Select(p => p.PetID).ToList();
         }
 
         public async Task<List<Pet>> FilterPetsPerPageAsync(PetFilterParams petFilterParams, int pageNumber, int pageSize)
