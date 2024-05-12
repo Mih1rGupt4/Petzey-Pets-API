@@ -59,8 +59,6 @@ namespace Petzey.Data.Repository
         public async Task<List<Pet>> FilterPetsAsync(PetFilterParams petFilterParams)
         {
 
-         
-
             var filteredPets =await _db.Pets.Where(p => (p.PetName.Contains(petFilterParams.PetName) || petFilterParams.PetName == null)
             && (p.Species.Contains(petFilterParams.Species) || petFilterParams.Species == null)
             && (petFilterParams.PetIds.Contains(p.PetID) || !petFilterParams.PetIds.Any())).ToListAsync();
@@ -94,7 +92,7 @@ namespace Petzey.Data.Repository
         
         public async Task<FilteredPetsDto> FilterPetsAsync(PetFilterParams petFilterParams, int pageNumber, int pageSize)
         {
-            IQueryable<Pet> query = _db.Pets;
+            IQueryable<Pet> query = _db.Pets.Where(p => p.IsDeleted == false);
 
             // Filter by pet name
             if (!string.IsNullOrEmpty(petFilterParams.PetName))
@@ -107,7 +105,7 @@ namespace Petzey.Data.Repository
             // Filter by pet IDs
             if (petFilterParams.PetIds != null && petFilterParams.PetIds.Any())
                 query = query.Where(p => petFilterParams.PetIds.Contains(p.PetID));
-           
+            
             FilteredPetsDto filteredPetsDto = new FilteredPetsDto();
             filteredPetsDto.Count = await query.CountAsync();
 
