@@ -60,6 +60,15 @@ namespace Petzey.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Route("filter/1")]
+        public async Task<IHttpActionResult> Filter([FromBody] PetFilterParams filterParams, [FromUri] int pageNumber, [FromUri] int pageSize)
+        {
+            FilteredPetsDto filteredPets = await _repo.FilterPetsAsync(filterParams, pageNumber, pageSize); // call the async method
+
+            return OkOrNotFound(filteredPets);
+        }
+
+        [HttpPost]
         [Route("filters", Name = "FilterPetsWithPagination")]
         public async Task<IHttpActionResult> FilterPetsWithPagination([FromBody] PetFilterParams filterParams, [FromUri] int pageNumber, [FromUri] int? pageSize = 10) // get pets with search criteria for pagination
         {

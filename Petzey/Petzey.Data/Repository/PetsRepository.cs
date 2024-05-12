@@ -83,7 +83,6 @@ namespace Petzey.Data.Repository
             if (petFilterParams.PetIds != null && petFilterParams.PetIds.Any())
                 query = query.Where(p => petFilterParams.PetIds.Contains(p.PetID));
             
-
             // Paginate and materialize
             List<Pet> filteredPets = await query.OrderBy(p => p.PetID)
                                                  .Skip((pageNumber - 1) * pageSize)
@@ -92,6 +91,56 @@ namespace Petzey.Data.Repository
 
             return filteredPets;
         }
+        
+        public async Task<FilteredPetsDto> FilterPetsAsync(PetFilterParams petFilterParams, int pageNumber, int pageSize)
+        {
+            IQueryable<Pet> query = _db.Pets;
+
+            // Filter by pet name
+            if (!string.IsNullOrEmpty(petFilterParams.PetName))
+                query = query.Where(p => p.PetName.Contains(petFilterParams.PetName));
+
+            // Filter by species
+            if (!string.IsNullOrEmpty(petFilterParams.Species))
+                query = query.Where(p => p.Species.Contains(petFilterParams.Species));
+
+            // Filter by pet IDs
+            if (petFilterParams.PetIds != null && petFilterParams.PetIds.Any())
+                query = query.Where(p => petFilterParams.PetIds.Contains(p.PetID));
+           
+            FilteredPetsDto filteredPetsDto = new FilteredPetsDto();
+            filteredPetsDto.Count = await query.CountAsync();
+
+            // Paginate and materialize
+            filteredPetsDto.Pets = await query.OrderBy(p => p.PetID)
+                                                 .Skip((pageNumber - 1) * pageSize)
+                                                 .Take(pageSize)
+                                                 .ToListAsync();
+
+            return filteredPetsDto;
+        }
+
+
+
+        public async Task<int> FilterPetsCount(PetFilterParams petFilterParams)
+        {
+            IQueryable<Pet> query = _db.Pets;
+
+            // Filter by pet name
+            if (!string.IsNullOrEmpty(petFilterParams.PetName))
+                query = query.Where(p => p.PetName.Contains(petFilterParams.PetName));
+
+            // Filter by species
+            if (!string.IsNullOrEmpty(petFilterParams.Species))
+                query = query.Where(p => p.Species.Contains(petFilterParams.Species));
+
+            // Filter by pet IDs
+            if (petFilterParams.PetIds != null && petFilterParams.PetIds.Any())
+                query = query.Where(p => petFilterParams.PetIds.Contains(p.PetID));
+
+            return await query.CountAsync(); // Use CountAsync to asynchronously count the number of results
+        }
+
 
         public async Task<List<Pet>> FilterPetsAndIdAsync(PetFilterParams petFilterParams,int[] petIds)
         {
@@ -193,25 +242,6 @@ namespace Petzey.Data.Repository
         {
             // Search for the pets with partcular ParentID and return them
             return await _db.Pets.Where(p => p.PetParentID == parentId).ToListAsync();
-        }
-
-        public async Task<int> FilterPetsCount(PetFilterParams petFilterParams)
-        {
-            IQueryable<Pet> query = _db.Pets;
-
-            // Filter by pet name
-            if (!string.IsNullOrEmpty(petFilterParams.PetName))
-                query = query.Where(p => p.PetName.Contains(petFilterParams.PetName));
-
-            // Filter by species
-            if (!string.IsNullOrEmpty(petFilterParams.Species))
-                query = query.Where(p => p.Species.Contains(petFilterParams.Species));
-
-            // Filter by pet IDs
-            if (petFilterParams.PetIds != null && petFilterParams.PetIds.Any())
-                query = query.Where(p => petFilterParams.PetIds.Contains(p.PetID));
-
-            return await query.CountAsync(); // Use CountAsync to asynchronously count the number of results
         }
 
     }
