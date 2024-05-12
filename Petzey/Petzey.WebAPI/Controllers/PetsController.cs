@@ -235,6 +235,57 @@ namespace Petzey.WebAPI.Controllers
             }
             return BadRequest("Failed in adding appointment date to pet");// Bad Request if not updated / error in input data
         }
+        [HttpPost]
+        [Route("Allergies")]
+        public async Task<IHttpActionResult> FilterAllergies([FromBody] string allergies)
+        {
+            var allAllergies  = await _repo.FilterAllergies(allergies);
+            if (allAllergies.Any())
+            {
+                return Ok(allAllergies);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
+        [Route("PetAllergies/{PetID}")]
+        public async Task<IHttpActionResult> PetAllergies(int PetID)
+        {
+            var petAllergies = await _repo.GetAllPetAllergies(PetID);
+            if (petAllergies.Any())
+            {
+                return Ok(petAllergies);
+            }
+            return BadRequest();
+        }
+
+
+        [HttpPost]
+        [Route("addPetAllergy")]
+        public async Task<IHttpActionResult> AddPetAllergy([FromBody] List<PetAllergies> allergies)
+        {
+            var petAllergies = await _repo.AddPetAllergy(allergies);
+            if (petAllergies.Any())
+            {
+                return Ok(petAllergies);
+            }
+            return BadRequest();
+        }
+
+        [HttpDelete]
+        [Route("deletePetAllergy/{allergyID}")]
+        public async Task<IHttpActionResult> DeletePetAllergy(int allergyID)
+        {
+            var result = await _repo.DeletePetAllergy(allergyID);
+            if (result)
+            {
+                return Ok("Allergy has been deleted");
+            }
+            return BadRequest();
+        }
 
         public IHttpActionResult OkOrNotFound(object obj)// function to verify if the object is found or not found
         {
@@ -261,6 +312,7 @@ namespace Petzey.WebAPI.Controllers
                 petImage = pet.PetImage
             }).ToList());
         }
+
 
     }
 }

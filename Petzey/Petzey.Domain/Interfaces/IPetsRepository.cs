@@ -30,5 +30,9 @@ namespace Petzey.Domain.Interfaces
         Task<bool> AddLastAppointmentDate(DateTime date, int id);
 
         Task<int> FilterPetsCount(PetFilterParams petFilterParams);
+        Task<List<Allergy>> FilterAllergies(string allergyName);
+        Task<List<PetAllergies>> GetAllPetAllergies(int id);
+        Task<List<PetAllergies>> AddPetAllergy(List<PetAllergies> allergies);
+        Task<bool> DeletePetAllergy(int id);
     }
 }

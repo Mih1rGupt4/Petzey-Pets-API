@@ -9,6 +9,6 @@ namespace Petzey.Domain.Entities
     public class Allergy
     {
         public int AllergyId { get; set; }
-        public int AllergyName { get; set; }
+        public string AllergyName { get; set; }
     }
 }

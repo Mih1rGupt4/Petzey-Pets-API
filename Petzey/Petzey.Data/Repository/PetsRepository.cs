@@ -222,7 +222,7 @@ namespace Petzey.Data.Repository
                 return false;
 
             // If pet is found then delete the pet and save the changes in the database
-            _db.Pets.Remove(pet);
+            _db.Pets.Find(pet).IsDeleted = true;
             await _db.SaveChangesAsync();
 
             // Return true indicating that the pet has successfully deleted
@@ -242,5 +242,40 @@ namespace Petzey.Data.Repository
             return await _db.Pets.Where(p => p.PetParentID == parentId).ToListAsync();
         }
 
+        public async Task<List<Allergy>> FilterAllergies(string allergyName)
+        {
+            //Search for Allergies containing the search term
+            return await _db.Allergies.Where(p => p.AllergyName.Contains(allergyName)).ToListAsync();
+        }
+
+        public async Task<List<PetAllergies>> GetAllPetAllergies(int id)
+        {
+            //get all allergies for a pet
+            return await _db.PetAllergies.Where( p => p.PetID == id).ToListAsync();
+        }
+
+        public async Task<List<PetAllergies>> AddPetAllergy(List<PetAllergies> allergies)
+        {
+            foreach (PetAllergies p in allergies)
+            {
+               _db.PetAllergies.Add(p);
+            }
+            await _db.SaveChangesAsync();
+            return allergies;
+        }
+
+        public async Task<bool> DeletePetAllergy(int id)
+        {
+            PetAllergies allergy = await _db.PetAllergies.FindAsync(id);
+
+            if(allergy == null)
+            {
+                return false;
+            }
+
+            _db.PetAllergies.Remove(allergy);
+            await _db.SaveChangesAsync();
+            return true;
+        }
     }
 }

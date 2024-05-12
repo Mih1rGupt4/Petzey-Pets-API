@@ -56,11 +56,11 @@ namespace Petzey.WebAPI.UnitTest
                 PetName = "Fido",
                 Gender = "Male",
                 PetParentID = "1",
-                Allergies = "",
+                //Allergies = "",
                 BloodGroup = "1",
                 Breed = "asdf",
                 DateOfBirth = new DateTime(),
-                LastAppointmentDate = new DateTime(),
+                ////LastAppointmentDate = new DateTime(),
                 Species = "asfd",
                 PetImage = ""
             };
@@ -157,8 +157,8 @@ namespace Petzey.WebAPI.UnitTest
                 Gender = "Male",
                 DateOfBirth = new DateTime(2019, 5, 15),
                 BloodGroup = "A+",
-                Allergies = "None",
-                LastAppointmentDate = DateTime.Now.AddDays(-30)
+                //Allergies = "None",
+                //LastAppointmentDate = DateTime.Now.AddDays(-30)
             };
             mockRepo.Setup(repo => repo.AddPet(It.IsAny<Pet>())).ReturnsAsync(test_pet);
             var controller = new PetsController(mockRepo.Object);
@@ -187,8 +187,8 @@ namespace Petzey.WebAPI.UnitTest
                 Gender = "Male",
                 DateOfBirth = new DateTime(2019, 5, 15),
                 BloodGroup = "A+",
-                Allergies = "None",
-                LastAppointmentDate = DateTime.Now.AddDays(-30)
+                //Allergies = "None",
+                //LastAppointmentDate = DateTime.Now.AddDays(-30)
             };
             var mockRepo = new Mock<IPetsRepository>();
             mockRepo.Setup(repo => repo.AddPet(It.IsAny<Pet>())).ReturnsAsync((Pet)null); // Simulate failed addition
@@ -220,8 +220,8 @@ namespace Petzey.WebAPI.UnitTest
                 Gender = "Male",
                 DateOfBirth = new DateTime(2019, 5, 15),
                 BloodGroup = "A+",
-                Allergies = "None",
-                LastAppointmentDate = DateTime.Now.AddDays(-30)
+                //Allergies = "None",
+                //LastAppointmentDate = DateTime.Now.AddDays(-30)
             };
             mockRepo.Setup(repo => repo.EditPet(test_pet)).ReturnsAsync(test_pet);
 
@@ -251,8 +251,8 @@ namespace Petzey.WebAPI.UnitTest
                 Gender = "Male",
                 DateOfBirth = new DateTime(2019, 5, 15),
                 BloodGroup = "A+",
-                Allergies = "None",
-                LastAppointmentDate = DateTime.Now.AddDays(-30)
+                //Allergies = "None",
+                //LastAppointmentDate = DateTime.Now.AddDays(-30)
             };
             mockRepo.Setup(repo => repo.EditPet(test_pet)).ReturnsAsync((Pet)null); // Simulate failed edit
 
@@ -351,8 +351,8 @@ namespace Petzey.WebAPI.UnitTest
                 Gender = "Male",
                 DateOfBirth = new DateTime(2019, 5, 15),
                 BloodGroup = "A+",
-                Allergies = "None",
-                LastAppointmentDate = DateTime.Now.AddDays(-30)
+                //Allergies = "None",
+                //LastAppointmentDate = DateTime.Now.AddDays(-30)
             };
             List<Pet> Pets = new List<Pet> { test_pet };
             mockRepo.Setup(repo => repo.GetPetsByPetParentIdAsync(parentId)).ReturnsAsync(Pets);
