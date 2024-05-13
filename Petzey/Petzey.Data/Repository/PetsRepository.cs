@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace Petzey.Data.Repository
 {
@@ -242,10 +243,10 @@ namespace Petzey.Data.Repository
             return await _db.Pets.Where(p => p.PetParentID == parentId).ToListAsync();
         }
 
-        public async Task<List<Allergy>> FilterAllergies(string allergyName)
+        public async Task<List<Allergy>> Allergies()
         {
             //Search for Allergies containing the search term
-            return await _db.Allergies.Where(p => p.AllergyName.Contains(allergyName)).ToListAsync();
+            return await _db.Allergies.ToListAsync();
         }
 
         public async Task<List<PetAllergies>> GetAllPetAllergies(int id)
@@ -254,26 +255,24 @@ namespace Petzey.Data.Repository
             return await _db.PetAllergies.Where( p => p.PetID == id).ToListAsync();
         }
 
-        public async Task<List<PetAllergies>> AddPetAllergy(List<PetAllergies> allergies)
+        public async Task<int> AddPetAllergy(List<int> allergyIDs, int petID)
         {
-            foreach (PetAllergies p in allergies)
+            foreach (int i  in allergyIDs)
             {
+                PetAllergies p = new PetAllergies { AllergyId = i, PetID= petID };
                _db.PetAllergies.Add(p);
             }
             await _db.SaveChangesAsync();
-            return allergies;
+            return petID;
         }
 
-        public async Task<bool> DeletePetAllergy(int id)
+        public async Task<bool> DeletePetAllergy(int petID)
         {
-            PetAllergies allergy = await _db.PetAllergies.FindAsync(id);
-
-            if(allergy == null)
+            List<PetAllergies> allergies =  _db.PetAllergies.Where(p => p.PetID == petID).ToList();
+            foreach ( PetAllergies a in allergies)
             {
-                return false;
+                _db.PetAllergies.Remove(a);
             }
-
-            _db.PetAllergies.Remove(allergy);
             await _db.SaveChangesAsync();
             return true;
         }

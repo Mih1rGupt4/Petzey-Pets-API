@@ -150,11 +150,12 @@ namespace Petzey.WebAPI.Controllers
 
         [HttpPost]
         [Route("addnewpet")]
-        public async Task<IHttpActionResult> AddPet([FromBody] Pet pet) //add a new pet
+        public async Task<IHttpActionResult> AddPet([FromBody] IPetAndAllergy petAndAllergy) //add a new pet
         {
-            var newPet = await _repo.AddPet(pet);//call function to add a pet
+            var newPet = await _repo.AddPet(petAndAllergy.Pet);//call function to add a pet
             if(newPet != null)
             {
+                await _repo.AddPetAllergy(petAndAllergy.allergies, newPet.PetID);
                 return Ok("New Pet added");// if the pet was added return an Ok request
             }
             return BadRequest("Pet not added!");// else return a BadRequest
@@ -183,9 +184,17 @@ namespace Petzey.WebAPI.Controllers
         }
 
         [HttpPut]
-        public async Task<IHttpActionResult> EditPet([FromBody] Pet pet)// to edit the details of a particular pet
+        public async Task<IHttpActionResult> EditPet([FromBody] IPetAndAllergy petAndAllergy)// to edit the details of a particular pet
         {
-            var editedPet = await _repo.EditPet(pet);// call the function to edit pet
+            var editedPet = await _repo.EditPet(petAndAllergy.Pet);// call the function to edit pet
+            foreach (int i in petAndAllergy.allergies)
+            {
+                await _repo.DeletePetAllergy(editedPet.PetID);
+            }
+
+            //add the edited allergies
+            await _repo.AddPetAllergy(petAndAllergy.allergies, editedPet.PetID);
+
             //checks if the returned value is null to verify if edit is successful or not
             if (editedPet != null)
             {
@@ -235,11 +244,11 @@ namespace Petzey.WebAPI.Controllers
             }
             return BadRequest("Failed in adding appointment date to pet");// Bad Request if not updated / error in input data
         }
-        [HttpPost]
+        [HttpGet]
         [Route("Allergies")]
-        public async Task<IHttpActionResult> FilterAllergies([FromBody] string allergies)
+        public async Task<IHttpActionResult> FilterAllergies()
         {
-            var allAllergies  = await _repo.FilterAllergies(allergies);
+            var allAllergies  = await _repo.Allergies();
             if (allAllergies.Any())
             {
                 return Ok(allAllergies);
@@ -263,18 +272,7 @@ namespace Petzey.WebAPI.Controllers
         }
 
 
-        [HttpPost]
-        [Route("addPetAllergy")]
-        public async Task<IHttpActionResult> AddPetAllergy([FromBody] List<PetAllergies> allergies)
-        {
-            var petAllergies = await _repo.AddPetAllergy(allergies);
-            if (petAllergies.Any())
-            {
-                return Ok(petAllergies);
-            }
-            return BadRequest();
-        }
-
+        
         [HttpDelete]
         [Route("deletePetAllergy/{allergyID}")]
         public async Task<IHttpActionResult> DeletePetAllergy(int allergyID)
