@@ -32,7 +32,7 @@ namespace Petzey.Domain.Interfaces
 
         Task<int> FilterPetsCount(PetFilterParams petFilterParams);
         Task<List<Allergy>> Allergies();
-        Task<List<PetAllergies>> GetAllPetAllergies(int id);
+        Task<List<int>> GetAllPetAllergies(int id);
         Task<int> AddPetAllergy(List<int> allergyIDs, int petID);
         Task<bool> DeletePetAllergy(int petID);
     }
