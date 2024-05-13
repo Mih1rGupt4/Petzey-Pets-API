@@ -237,14 +237,14 @@ namespace Petzey.Data.Repository
             if (pet == null)
                 return false;
 
-            // If pet is found then delete the pet and save the changes in the database
-            _db.Pets.Find(pet).IsDeleted = true;
+            // If pet is found then set the IsDeleted property to true and save the changes in the database
+            pet.IsDeleted = true;
             await _db.SaveChangesAsync();
 
             // Return true indicating that the pet has successfully deleted
             return true;
         }
-        
+
         public async Task<bool> AddLastAppointmentDate(DateTime date, int id)
         {
             var pet = _db.Pets.Find(id);
@@ -255,7 +255,7 @@ namespace Petzey.Data.Repository
         public async Task<List<Pet>> GetPetsByPetParentIdAsync(string parentId)
         {
             // Search for the pets with partcular ParentID and return them
-            return await _db.Pets.Where(p => p.PetParentID == parentId).ToListAsync();
+            return await _db.Pets.Where(p => (p.PetParentID == parentId) && (p.IsDeleted == false)).ToListAsync();
         }
 
         public async Task<List<Allergy>> Allergies()
