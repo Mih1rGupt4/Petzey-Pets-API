@@ -164,6 +164,21 @@ namespace Petzey.Data.Repository
             return pets;
         }
 
+        public async Task<List<Pet>> GetPetsDetailsByIdsAsync(int[] petIds)
+        {
+
+            // Perform the query
+            var pets = await _db.Pets
+                .Where(pet => petIds.Contains(pet.PetID))
+                .ToListAsync();
+
+            // If no pets are found, return null
+            if (pets.Count == 0)
+                return null;
+
+            return pets;
+        }
+
         public async Task<Pet> AddPet(Pet pet)
         {
             _db.Pets.Add(pet); 

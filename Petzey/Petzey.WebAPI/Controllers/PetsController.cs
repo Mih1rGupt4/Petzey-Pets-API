@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Management;
@@ -183,6 +184,29 @@ namespace Petzey.WebAPI.Controllers
             return Ok(petCardDtos);
         }
 
+        [HttpPost]
+        [Route("getPetsGridDetailsByIDs")]
+        public async Task<IHttpActionResult> GetPetsDetailsByIDsInPetGridDto([FromBody] int[] ids)
+        {
+            // If ids is null or empty, return BadRequest immediately
+            if (ids == null || ids.Length == 0)
+            {
+                return BadRequest("No IDs provided");
+            }
+
+            var petsByIDs = await _repo.GetPetsDetailsByIdsAsync(ids);
+
+            // If petsByIDs is null, it indicates no pets were found for the given IDs
+            if (petsByIDs == null)
+            {
+                return BadRequest("Pets not found for the given ids");
+            }
+
+            var petCardDtos = await ConvertPetsToPetGridDetailsDtoAsync(petsByIDs);
+
+            return Ok(petCardDtos);
+        }
+
         [HttpPut]
         public async Task<IHttpActionResult> EditPet([FromBody] IPetAndAllergy petAndAllergy)// to edit the details of a particular pet
         {
@@ -308,6 +332,26 @@ namespace Petzey.WebAPI.Controllers
                 PetGender = pet.Gender,
                 OwnerID = pet.PetParentID,
                 petImage = pet.PetImage
+            }).ToList());
+        }
+
+        public async Task<List<PetGridDetailsDto>> ConvertPetsToPetGridDetailsDtoAsync(List<Pet> pets)// function to convert the pet entity to pet dto
+        {
+            if (pets == null)
+            {
+                return null; // Return null if pets is null
+            }
+
+            // No asynchronous operations here, but marked as async to indicate it can be used in async contexts
+            return await Task.FromResult(pets.Select(pet => new PetGridDetailsDto
+            {
+                PetID = pet.PetID,
+                PetName = pet.PetName,
+                Gender = pet.Gender,
+                PetParentID = pet.PetParentID,
+                PetImage = pet.PetImage,
+                DateOfBirth = pet.DateOfBirth
+
             }).ToList());
         }
 

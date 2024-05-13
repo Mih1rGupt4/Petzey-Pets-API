@@ -18,6 +18,7 @@ namespace Petzey.Domain.Interfaces
 
         Task<List<Pet>> FilterPetsAndIdAsync(PetFilterParams petFilterParams, int[] petIds);
         Task<List<Pet>> GetPetsByIdsAsync(int[] petIds);
+        Task<List<Pet>> GetPetsDetailsByIdsAsync(int[] petIds);
 
         Task<Pet> AddPet(Pet pet);
         Task<Pet> EditPet(Pet pet);
