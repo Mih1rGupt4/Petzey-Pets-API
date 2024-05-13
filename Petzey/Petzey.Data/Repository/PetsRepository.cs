@@ -249,10 +249,17 @@ namespace Petzey.Data.Repository
             return await _db.Allergies.ToListAsync();
         }
 
-        public async Task<List<PetAllergies>> GetAllPetAllergies(int id)
+        public async Task<List<int>> GetAllPetAllergies(int id)
         {
+            List<int> allIDs = new List<int>();
             //get all allergies for a pet
-            return await _db.PetAllergies.Where( p => p.PetID == id).ToListAsync();
+            var allergyList = await _db.PetAllergies.Where(p => p.PetID == id).ToListAsync();
+
+            foreach (var item in allergyList)
+            {
+                allIDs.Add(item.AllergyId);
+            }
+            return allIDs;
         }
 
         public async Task<int> AddPetAllergy(List<int> allergyIDs, int petID)
