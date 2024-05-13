@@ -66,7 +66,14 @@ namespace Petzey.WebAPI.Controllers
         {
             FilteredPetsDto filteredPets = await _repo.FilterPetsAsync(filterParams, pageNumber, pageSize); // call the async method
 
-            return OkOrNotFound(filteredPets);
+            if(filteredPets.Count > 0 && filteredPets.Pets.Any())
+            {
+                return Ok(filteredPets);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
