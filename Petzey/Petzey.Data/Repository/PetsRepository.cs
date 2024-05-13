@@ -59,7 +59,7 @@ namespace Petzey.Data.Repository
         public async Task<List<int>> FilterPetsAsync(PetFilterParams petFilterParams)
         {
 
-            var filteredPets = await _db.Pets.Where(p => (p.PetName.Contains(petFilterParams.PetName) || petFilterParams.PetName == null)
+            var filteredPets = await _db.Pets.Where(p => p.IsDeleted == false && (p.PetName.Contains(petFilterParams.PetName) || petFilterParams.PetName == null)
                  && (p.Species.Contains(petFilterParams.Species) || petFilterParams.Species == null)
                  && (petFilterParams.PetIds.Contains(p.PetID) || !petFilterParams.PetIds.Any())).ToListAsync();
             return filteredPets.Select(p => p.PetID).ToList();
