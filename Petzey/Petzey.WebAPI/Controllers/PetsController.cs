@@ -218,10 +218,10 @@ namespace Petzey.WebAPI.Controllers
         public async Task<IHttpActionResult> EditPet([FromBody] IPetAndAllergy petAndAllergy)// to edit the details of a particular pet
         {
             var editedPet = await _repo.EditPet(petAndAllergy.Pet);// call the function to edit pet
-            foreach (int i in petAndAllergy.allergies)
-            {
-                await _repo.DeletePetAllergy(editedPet.PetID);
-            }
+            //delete the current allergies before updating
+            await _repo.DeletePetAllergy(editedPet.PetID);
+
+            
 
             //add the edited allergies
             await _repo.AddPetAllergy(petAndAllergy.allergies, editedPet.PetID);
