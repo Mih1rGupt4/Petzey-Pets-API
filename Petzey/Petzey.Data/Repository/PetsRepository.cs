@@ -166,18 +166,27 @@ namespace Petzey.Data.Repository
 
         public async Task<List<Pet>> GetPetsDetailsByIdsAsync(int[] petIds)
         {
-
             // Perform the query
             var pets = await _db.Pets
                 .Where(pet => petIds.Contains(pet.PetID))
                 .ToListAsync();
 
-            // If no pets are found, return null
-            if (pets.Count == 0)
-                return null;
+            // Create an empty list to store pets in desired order
+            var orderedPets = new List<Pet>();
 
-            return pets;
+            // Loop through petIds and add corresponding pets to orderedPets
+            foreach (var petId in petIds)
+            {
+                var pet = pets.FirstOrDefault(p => p.PetID == petId);
+                if (pet != null)
+                {
+                    orderedPets.Add(pet);
+                }
+            }
+
+            return orderedPets;
         }
+
 
         public async Task<Pet> AddPet(Pet pet)
         {
